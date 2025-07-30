@@ -1,0 +1,421 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en" x-data="{ darkMode: localStorage.getItem('darkMode') === 'true', mobileMenuOpen: false, chatOpen: false }" :class="{ 'dark': darkMode }">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ post.title }} | EPICARE Blog</title>
+    <meta name="description" content="{{ post.title|truncatewords:20 }} - Read more on Epicare Africa's blog about epilepsy care and advocacy">
+    
+    <!-- Tailwind with Epicare colors -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                fontFamily: {
+                    sans: ['Inter', 'sans-serif'],
+                    display: ['Calibre', 'Inter', 'sans-serif'],
+                },
+                extend: {
+                    colors: {
+                        primary: '#6A0DAD',
+                        secondary: '#8655B9',
+                        accent: '#FF6C0C',
+                        dark: '#121212',
+                        light: '#FAFAFA',
+                    },
+                    animation: {
+                        'fade-in': 'fadeIn 0.8s ease-out',
+                        'slide-up': 'slideUp 0.6s ease-out',
+                    },
+                    keyframes: {
+                        fadeIn: {
+                            '0%': { opacity: '0' },
+                            '100%': { opacity: '1' },
+                        },
+                        slideUp: {
+                            '0%': { transform: 'translateY(20px)', opacity: '0' },
+                            '100%': { transform: 'translateY(0)', opacity: '1' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.cdnfonts.com/css/calibre" rel="stylesheet">
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- Alpine JS -->
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    
+    <style>
+        .prose {
+            color: #1f2937;
+            max-width: 100%;
+        }
+        .dark .prose {
+            color: #e5e7eb;
+        }
+        .prose a {
+            color: #6A0DAD;
+            text-decoration: none;
+            font-weight: 500;
+        }
+        .dark .prose a {
+            color: #8655B9;
+        }
+        .prose a:hover {
+            text-decoration: underline;
+        }
+        .prose img {
+            border-radius: 0.5rem;
+            margin: 1.5rem auto;
+        }
+        .prose h2, .prose h3 {
+            font-family: 'Calibre', sans-serif;
+            font-weight: 600;
+            margin-top: 2rem;
+            margin-bottom: 1rem;
+        }
+        .prose h2 {
+            font-size: 1.5rem;
+            color: #6A0DAD;
+        }
+        .dark .prose h2 {
+            color: #8655B9;
+        }
+        .share-btn {
+            transition: all 0.3s ease;
+        }
+        .share-btn:hover {
+            transform: translateY(-2px);
+        }
+        .tag {
+            transition: all 0.3s ease;
+        }
+        .tag:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        .nav-link {
+            position: relative;
+        }
+        .nav-link:after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: -4px;
+            left: 0;
+            background-color: var(--primary);
+            transition: width 0.3s ease;
+        }
+        .nav-link:hover:after {
+            width: 100%;
+        }
+    </style>
+</head>
+<body class="bg-light dark:bg-dark text-gray-900 dark:text-white transition-colors duration-300 scroll-smooth">
+    <!-- Navigation -->
+    <header class="sticky top-0 z-50 bg-white/80 dark:bg-dark/80 backdrop-blur-md shadow-sm">
+        <div class="container mx-auto px-6 py-4">
+            <div class="flex justify-between items-center">
+                <a href="{% url 'homepage' %}" class="text-3xl font-bold font-display flex items-center group">
+                    <span class="text-primary group-hover:text-secondary transition">EPI</span>
+                    <span class="text-gray-900 dark:text-white group-hover:text-primary transition">CARE</span>
+                    <span class="ml-2 text-xs bg-accent text-white px-2 py-1 rounded-full animate-pulse">Africa</span>
+                </a>
+                
+                <!-- Desktop Navigation -->
+                <nav class="hidden md:flex space-x-8 items-center">
+                    <a href="{% url 'homepage' %}" class="nav-link text-gray-600 dark:text-gray-300 font-medium">Home</a>
+                    <a href="{% url 'about' %}" class="nav-link text-gray-600 dark:text-gray-300 font-medium">About</a>
+                    <a href="{% url 'shop' %}" class="nav-link text-gray-600 dark:text-gray-300 font-medium">Shop</a>
+                    <a href="{% url 'blog' %}" class="nav-link text-primary dark:text-primary font-medium">Blog</a>
+                    <a href="{% url 'contact' %}" class="nav-link text-gray-600 dark:text-gray-300 font-medium">Contact</a>
+                    <button @click="chatOpen = true" class="bg-primary text-white px-6 py-2 rounded-lg hover:bg-secondary transition flex items-center">
+                        <i class="fas fa-comment-medical mr-2"></i> Support
+                    </button>
+                </nav>
+                
+                <!-- Mobile Menu Button -->
+                <button @click="mobileMenuOpen = !mobileMenuOpen" class="md:hidden text-2xl focus:outline-none">
+                    <i x-show="!mobileMenuOpen" class="fas fa-bars"></i>
+                    <i x-show="mobileMenuOpen" class="fas fa-times"></i>
+                </button>
+            </div>
+            
+            <!-- Mobile Menu -->
+            <div x-show="mobileMenuOpen" x-transition class="md:hidden mt-4 py-4 border-t border-gray-200 dark:border-gray-700">
+                <div class="flex flex-col space-y-4">
+                    <a href="{% url 'homepage' %}" class="px-3 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition font-medium">Home</a>
+                    <a href="{% url 'about' %}" class="px-3 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition font-medium">About</a>
+                    <a href="{% url 'shop' %}" class="px-3 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition font-medium">Shop</a>
+                    <a href="{% url 'blog' %}" class="px-3 py-2 rounded-lg bg-primary/10 text-primary dark:text-primary font-medium">Blog</a>
+                    <a href="{% url 'contact' %}" class="px-3 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition font-medium">Contact</a>
+                    <button @click="chatOpen = true" class="w-full bg-primary text-white px-6 py-3 rounded-lg hover:bg-secondary transition font-semibold mt-4 flex items-center justify-center">
+                        <i class="fas fa-comment-medical mr-2"></i> Support
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Live Chat Widget -->
+    <div x-data="{ chatOpen: false }" class="fixed bottom-4 right-4 z-50">
+        <button @click="chatOpen = !chatOpen" class="bg-primary text-white p-4 rounded-full shadow-xl hover:bg-secondary transition transform hover:scale-110">
+            <i x-show="!chatOpen" class="fas fa-comment-medical text-xl"></i>
+            <i x-show="chatOpen" class="fas fa-times text-xl"></i>
+        </button>
+        <div x-show="chatOpen" x-transition class="absolute bottom-20 right-0 w-80 bg-white dark:bg-gray-800 rounded-xl shadow-xl overflow-hidden">
+            <div class="bg-primary text-white p-4">
+                <h3 class="font-semibold">Epicare Support</h3>
+                <p class="text-sm opacity-90">Ask our epilepsy specialists</p>
+            </div>
+            <div class="p-4 h-64 overflow-y-auto">
+                <div class="flex mb-4">
+                    <div class="bg-gray-100 dark:bg-gray-700 rounded-lg p-3 max-w-xs">
+                        <p class="text-sm">Hello! I'm here to answer your epilepsy questions. How can I help?</p>
+                    </div>
+                </div>
+            </div>
+            <div class="border-t border-gray-200 dark:border-gray-700 p-4">
+                <div class="flex items-center">
+                    <input type="text" placeholder="Type your question..." class="flex-grow border rounded-l-lg px-4 py-2 focus:outline-none focus:ring-1 focus:ring-primary dark:bg-gray-700">
+                    <button class="bg-primary text-white px-4 py-2 rounded-r-lg hover:bg-secondary transition">
+                        <i class="fas fa-paper-plane"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Blog Post Content -->
+    <article class="py-16 bg-white dark:bg-dark">
+        <div class="container mx-auto px-6 max-w-4xl">
+            {% if messages %}
+                <div class="mb-8">
+                    {% for message in messages %}
+                        <div class="p-4 mb-4 text-white {% if message.tags == 'success' %}bg-green-500{% else %}bg-red-500{% endif %} rounded-lg">
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+
+            <div class="mb-12 text-center">
+                <div class="flex items-center justify-center space-x-4 mb-4">
+                    <span class="text-sm text-gray-500 dark:text-gray-400">{{ post.created_at|date:"F d, Y" }}</span>
+                    <span class="text-gray-400">•</span>
+                    <span class="text-sm text-gray-500 dark:text-gray-400">{{ post.read_time }} min read</span>
+                </div>
+                <h1 class="text-3xl md:text-4xl lg:text-5xl font-bold font-display mb-6 leading-tight">{{ post.title }}</h1>
+                
+                {% if post.tags %}
+                <div class="flex flex-wrap justify-center gap-2 mt-4">
+                    {% for tag in post.tags.split %}
+                        <span class="tag bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-200 px-3 py-1 rounded-full text-xs font-medium">
+                            {{ tag }}
+                        </span>
+                    {% endfor %}
+                </div>
+                {% endif %}
+            </div>
+
+            {% if post.image %}
+            <div class="mb-12 rounded-xl overflow-hidden shadow-lg">
+                <img src="{{ post.image.url }}" alt="{{ post.title }}" class="w-full h-auto object-cover">
+            </div>
+            {% endif %}
+
+            <div class="prose dark:prose-invert max-w-none mx-auto">
+                {{ post.content|linebreaks }}
+            </div>
+
+            <div class="mt-16 pt-8 border-t border-gray-200 dark:border-gray-700">
+                <h3 class="text-xl font-semibold mb-6">Share this article</h3>
+                <div class="flex space-x-4">
+                    <a href="https://twitter.com/intent/tweet?url={{ request.build_absolute_uri }}&text={{ post.title|urlencode }}" 
+                       target="_blank" 
+                       class="share-btn bg-blue-400 text-white px-6 py-3 rounded-lg hover:bg-blue-500 transition flex items-center">
+                        <i class="fab fa-twitter mr-2"></i> Twitter
+                    </a>
+                    <a href="https://www.facebook.com/sharer/sharer.php?u={{ request.build_absolute_uri }}" 
+                       target="_blank" 
+                       class="share-btn bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition flex items-center">
+                        <i class="fab fa-facebook-f mr-2"></i> Facebook
+                    </a>
+                    <a href="https://www.linkedin.com/sharing/share-offsite/?url={{ request.build_absolute_uri }}" 
+                       target="_blank" 
+                       class="share-btn bg-blue-800 text-white px-6 py-3 rounded-lg hover:bg-blue-900 transition flex items-center">
+                        <i class="fab fa-linkedin-in mr-2"></i> LinkedIn
+                    </a>
+                </div>
+            </div>
+        </div>
+    </article>
+
+    <!-- Related Posts -->
+    <section class="py-16 bg-gray-50 dark:bg-gray-900">
+        <div class="container mx-auto px-6">
+            <h2 class="text-2xl md:text-3xl font-bold font-display mb-8 text-center">More From Our Blog</h2>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- Placeholder for related posts - in a real app you'd loop through related posts -->
+                <div class="bg-white dark:bg-gray-800 rounded-xl overflow-hidden shadow-md hover:shadow-lg transition">
+                    <div class="relative h-48 overflow-hidden">
+                        <img src="https://placehold.co/600x400/6A0DAD/FFFFFF?text=Epilepsy+Research" alt="Related post" class="w-full h-full object-cover">
+                    </div>
+                    <div class="p-6">
+                        <h3 class="text-xl font-semibold mb-2">Breakthrough in Epilepsy Treatment</h3>
+                        <p class="text-gray-600 dark:text-gray-300 mb-4">New research shows promising results for localized treatment options...</p>
+                        <a href="#" class="text-primary font-medium hover:underline">Read More</a>
+                    </div>
+                </div>
+                
+                <div class="bg-white dark:bg-gray-800 rounded-xl overflow-hidden shadow-md hover:shadow-lg transition">
+                    <div class="relative h-48 overflow-hidden">
+                        <img src="https://placehold.co/600x400/8655B9/FFFFFF?text=Community+Story" alt="Related post" class="w-full h-full object-cover">
+                    </div>
+                    <div class="p-6">
+                        <h3 class="text-xl font-semibold mb-2">Overcoming Epilepsy Stigma</h3>
+                        <p class="text-gray-600 dark:text-gray-300 mb-4">How education transformed attitudes in rural communities...</p>
+                        <a href="#" class="text-primary font-medium hover:underline">Read More</a>
+                    </div>
+                </div>
+                
+                <div class="bg-white dark:bg-gray-800 rounded-xl overflow-hidden shadow-md hover:shadow-lg transition">
+                    <div class="relative h-48 overflow-hidden">
+                        <img src="https://placehold.co/600x400/FF6C0C/FFFFFF?text=Technology" alt="Related post" class="w-full h-full object-cover">
+                    </div>
+                    <div class="p-6">
+                        <h3 class="text-xl font-semibold mb-2">Mobile Apps for Epilepsy</h3>
+                        <p class="text-gray-600 dark:text-gray-300 mb-4">How smartphone applications are helping patients track seizures...</p>
+                        <a href="#" class="text-primary font-medium hover:underline">Read More</a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="text-center mt-12">
+                <a href="{% url 'blog' %}" class="inline-flex items-center text-primary font-semibold hover:underline text-lg">
+                    View All Blog Posts <i class="fas fa-arrow-right ml-2"></i>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Newsletter Section -->
+    <section class="py-16 bg-white dark:bg-dark">
+        <div class="container mx-auto px-6 max-w-4xl">
+            <div class="bg-gradient-to-r from-primary to-secondary text-white rounded-2xl p-8 md:p-12 shadow-lg">
+                <div class="flex flex-col md:flex-row items-center">
+                    <div class="md:w-2/3 mb-6 md:mb-0">
+                        <h2 class="text-2xl md:text-3xl font-bold font-display mb-4">Stay Updated</h2>
+                        <p class="opacity-90">
+                            Subscribe to our newsletter for the latest epilepsy research, blog updates, and inspiring stories from across Africa.
+                        </p>
+                    </div>
+                    <div class="md:w-1/3">
+                        <form class="flex flex-col sm:flex-row gap-4">
+                            <input type="email" placeholder="Your email" class="flex-grow px-4 py-3 rounded-lg border-0 focus:ring-2 focus:ring-white">
+                            <button type="submit" class="bg-white text-primary px-6 py-3 rounded-lg font-semibold whitespace-nowrap hover:bg-opacity-90 transition">
+                                Subscribe
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-gray-900 text-white pt-20 pb-10">
+        <div class="container mx-auto px-6">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-12">
+                <div>
+                    <a href="{% url 'homepage' %}" class="text-3xl font-bold font-display flex items-center group mb-6">
+                        <span class="text-primary group-hover:text-secondary transition">EPI</span>
+                        <span class="text-white group-hover:text-primary transition">CARE</span>
+                        <span class="ml-2 text-xs bg-accent text-white px-2 py-1 rounded-full">Africa</span>
+                    </a>
+                    <p class="text-gray-400 mb-6">
+                        Transforming epilepsy care across Africa through innovative technology and community education.
+                    </p>
+                    <div class="flex space-x-4">
+                        <a href="#" class="text-gray-400 hover:text-white transition">
+                            <i class="fab fa-facebook-f"></i>
+                        </a>
+                        <a href="#" class="text-gray-400 hover:text-white transition">
+                            <i class="fab fa-twitter"></i>
+                        </a>
+                        <a href="#" class="text-gray-400 hover:text-white transition">
+                            <i class="fab fa-instagram"></i>
+                        </a>
+                        <a href="#" class="text-gray-400 hover:text-white transition">
+                            <i class="fab fa-linkedin-in"></i>
+                        </a>
+                        <a href="#" class="text-gray-400 hover:text-white transition">
+                            <i class="fab fa-youtube"></i>
+                        </a>
+                    </div>
+                </div>
+                
+                <div>
+                    <h3 class="text-lg font-semibold mb-6">Quick Links</h3>
+                    <ul class="space-y-3">
+                        <li><a href="{% url 'homepage' %}" class="text-gray-400 hover:text-white transition">Home</a></li>
+                        <li><a href="{% url 'about' %}" class="text-gray-400 hover:text-white transition">About Us</a></li>
+                        <li><a href="{% url 'shop' %}" class="text-gray-400 hover:text-white transition">Our Products</a></li>
+                        <li><a href="{% url 'blog' %}" class="text-gray-400 hover:text-white transition">Blog</a></li>
+                        <li><a href="{% url 'contact' %}" class="text-gray-400 hover:text-white transition">Contact</a></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h3 class="text-lg font-semibold mb-6">Blog Categories</h3>
+                    <ul class="space-y-3">
+                        <li><a href="#" class="text-gray-400 hover:text-white transition">Research Updates</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition">Community Stories</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition">Treatment Options</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition">Educational Content</a></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h3 class="text-lg font-semibold mb-6">Contact Us</h3>
+                    <ul class="space-y-3">
+                        <li class="flex items-start">
+                            <i class="fas fa-map-marker-alt text-primary mt-1 mr-3"></i>
+                            <span class="text-gray-400">Nairobi, Kenya | Kampala, Uganda | Lagos, Nigeria</span>
+                        </li>
+                        <li class="flex items-center">
+                            <i class="fas fa-phone-alt text-primary mr-3"></i>
+                            <span class="text-gray-400">+254 700 123456</span>
+                        </li>
+                        <li class="flex items-center">
+                            <i class="fas fa-envelope text-primary mr-3"></i>
+                            <span class="text-gray-400">info@epicare.africa</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="border-t border-gray-800 pt-8 flex flex-col md:flex-row justify-between items-center">
+                <p class="text-gray-500 text-sm mb-4 md:mb-0">
+                    &copy; 2025 Epicare Africa. All rights reserved.
+                </p>
+                <div class="flex space-x-6">
+                    <a href="#" class="text-gray-500 hover:text-white text-sm transition">Privacy Policy</a>
+                    <a href="#" class="text-gray-500 hover:text-white text-sm transition">Terms of Service</a>
+                    <a href="#" class="text-gray-500 hover:text-white text-sm transition">Cookie Policy</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>

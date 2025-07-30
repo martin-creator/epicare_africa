@@ -1,0 +1,24 @@
+/* Generated with Tailwind CSS */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+    @apply bg-gray-100 dark:bg-gray-900 font-sans text-gray-900 dark:text-gray-100;
+}
+
+img {
+    @apply max-w-full h-auto;
+}
+
+input, textarea, select {
+    @apply border-gray-300 dark:border-gray-600 rounded focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-800 dark:text-gray-100;
+}
+
+button {
+    @apply transition duration-200;
+}
+
+.prose {
+    @apply text-gray-800 dark:text-gray-200;
+}

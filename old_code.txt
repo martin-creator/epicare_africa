@@ -1,0 +1,185 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en" x-data="{ darkMode: localStorage.getItem('darkMode') === 'true', chatOpen: false, showConsent: !localStorage.getItem('cookieConsent'), open: false, product: {} }" :class="{ 'dark': darkMode }" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Shop seizure safety products at Epicare Africa, including kits and mouthguards with secure Pesapal payments.">
+    <meta name="keywords" content="epilepsy, seizure safety, healthcare, Africa, shop">
+    <meta property="og:title" content="Epicare Africa - Shop">
+    <meta property="og:description" content="Shop seizure safety products at Epicare Africa.">
+    <meta property="og:image" content="{% static 'images/logo.png' %}">
+    <title>Epicare Africa - Shop</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const forms = document.querySelectorAll('form');
+            forms.forEach(form => {
+                form.addEventListener('submit', (e) => {
+                    const inputs = form.querySelectorAll('input[required], textarea[required]');
+                    let valid = true;
+                    inputs.forEach(input => {
+                        if (!input.value.trim()) {
+                            valid = false;
+                            input.classList.add('border-red-500');
+                        } else {
+                            input.classList.remove('border-red-500');
+                        }
+                    });
+                    if (!valid) {
+                        e.preventDefault();
+                        alert('Please fill in all required fields.');
+                    }
+                });
+            });
+        });
+    </script>
+</head>
+<body class="bg-gray-100 dark:bg-gray-900 font-sans text-gray-900 dark:text-gray-100 transition-colors duration-300">
+    <!-- Cookie Consent Popup -->
+    <div x-show="showConsent" class="fixed bottom-4 left-4 bg-white dark:bg-gray-800 p-4 rounded-lg shadow-lg z-50 animate-fade-in">
+        <p class="text-sm">We use cookies to improve your experience. By continuing, you agree to our cookie policy.</p>
+        <button @click="localStorage.setItem('cookieConsent', 'true'); showConsent = false" class="bg-blue-600 text-white px-4 py-2 mt-2 rounded hover:bg-blue-700 transition">Accept</button>
+    </div>
+
+    <!-- Dark Mode Toggle -->
+    <button @click="darkMode = !darkMode; localStorage.setItem('darkMode', darkMode)" class="fixed top-4 right-4 p-2 bg-gray-200 dark:bg-gray-700 rounded-full z-50 hover:scale-110 transition">
+        <svg x-show="!darkMode" class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" /></svg>
+        <svg x-show="darkMode" class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" /></svg>
+    </button>
+
+    <!-- Live Chat Widget -->
+    <div x-data="{ chatOpen: false }" class="fixed bottom-4 right-4 z-50">
+        <button @click="chatOpen = !chatOpen" class="bg-blue-600 text-white p-3 rounded-full shadow-lg hover:scale-110 transition">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" /></svg>
+        </button>
+        <div x-show="chatOpen" class="bg-white dark:bg-gray-800 p-4 rounded-lg shadow-lg mt-2 w-64 animate-fade-in">
+            <h3 class="text-lg font-semibold mb-2">Chat with Us</h3>
+            <p class="text-sm">We're here to help! Send us a message.</p>
+            <textarea class="w-full p-2 border rounded mt-2 dark:bg-gray-700 dark:border-gray-600" rows="3" placeholder="Type your message..."></textarea>
+            <button class="bg-blue-600 text-white px-4 py-2 rounded mt-2 hover:bg-blue-700 transition">Send</button>
+        </div>
+    </div>
+
+    <!-- Header -->
+    <header class="bg-blue-600 text-white p-4 sticky top-0 z-40 shadow-md">
+        <nav class="container mx-auto flex justify-between items-center">
+            <a href="{% url 'homepage' %}" class="text-2xl font-bold hover:scale-105 transition">Epicare Africa</a>
+            <ul class="flex space-x-4">
+                <li><a href="{% url 'homepage' %}" class="hover:underline focus:outline-none focus:ring-2 focus:ring-white rounded px-2 py-1">Home</a></li>
+                <li><a href="{% url 'about' %}" class="hover:underline focus:outline-none focus:ring-2 focus:ring-white rounded px-2 py-1">About</a></li>
+                <li><a href="{% url 'shop' %}" class="hover:underline focus:outline-none focus:ring-2 focus:ring-white rounded px-2 py-1">Shop</a></li>
+                <li><a href="{% url 'blog' %}" class="hover:underline focus:outline-none focus:ring-2 focus:ring-white rounded px-2 py-1">Blog</a></li>
+                <li><a href="{% url 'contact' %}" class="hover:underline focus:outline-none focus:ring-2 focus:ring-white rounded px-2 py-1">Contact</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <!-- Main Content -->
+    <main class="container mx-auto p-4">
+        {% if messages %}
+            <div class="mb-4">
+                {% for message in messages %}
+                    <div class="p-4 mb-2 text-white {% if message.tags == 'success' %}bg-green-500{% else %}bg-red-500{% endif %} rounded animate-fade-in">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+
+        <section class="my-8 animate-fade-in">
+            <h1 class="text-3xl font-bold text-center mb-4">Shop Seizure Safety Products</h1>
+            <div class="flex flex-col md:flex-row justify-between items-center mb-6">
+                <form method="get" class="w-full md:w-1/3">
+                    {{ search_form.as_p }}
+                    <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition w-full focus:outline-none focus:ring-2 focus:ring-blue-300">Search</button>
+                </form>
+                <div class="flex space-x-4 mt-4 md:mt-0">
+                    <select onchange="location = this.value;" class="p-2 border rounded dark:bg-gray-700 dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-300">
+                        <option value="?sort_by=name" {% if sort_by == 'name' %}selected{% endif %}>Sort by Name</option>
+                        <option value="?sort_by=price_asc" {% if sort_by == 'price_asc' %}selected{% endif %}>Price: Low to High</option>
+                        <option value="?sort_by=price_desc" {% if sort_by == 'price_desc' %}selected{% endif %}>Price: High to Low</option>
+                    </select>
+                    <select onchange="location = this.value;" class="p-2 border rounded dark:bg-gray-700 dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-300">
+                        <option value="" {% if not selected_category %}selected{% endif %}>All Categories</option>
+                        {% for category in categories %}
+                            <option value="?category={{ category.id }}" {% if selected_category == category.id|stringformat:'s' %}selected{% endif %}>{{ category.name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+                {% for product in products %}
+                    <div class="bg-white dark:bg-gray-800 p-4 rounded-lg shadow-lg transform hover:scale-105 transition animate-fade-in">
+                        <img src="{{ product.image.url }}" alt="{{ product.name }}" loading="lazy" class="w-full h-48 object-cover mb-2 rounded">
+                        <h3 class="text-xl font-semibold">{{ product.name }}</h3>
+                        <p class="text-gray-600 dark:text-gray-300">{{ product.description|truncatewords:20 }}</p>
+                        <p class="text-gray-600 dark:text-gray-300">KES {{ product.price }}</p>
+                        <button @click="$dispatch('open-quick-view', { id: {{ product.id }}, name: '{{ product.name }}', price: '{{ product.price }}', description: '{{ product.description|escapejs }}', image: '{{ product.image.url }}' })" class="bg-gray-600 text-white px-4 py-2 rounded hover:bg-gray-700 transition mt-2 w-full focus:outline-none focus:ring-2 focus:ring-gray-300">Quick View</button>
+                        <form method="post" action="{% url 'buy_now' product.id %}" class="mt-2">
+                            {% csrf_token %}
+                            <label for="quantity-{{ product.id }}" class="block text-sm">Quantity:</label>
+                            <input type="number" id="quantity-{{ product.id }}" name="quantity" min="1" max="{{ product.stock }}" value="1" class="w-16 p-1 border rounded dark:bg-gray-700 dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-300">
+                            <input type="email" name="email" placeholder="Your email" class="w-full p-1 border rounded mt-2 dark:bg-gray-700 dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-300" required>
+                            <input type="tel" name="phone" placeholder="Your phone" class="w-full p-1 border rounded mt-2 dark:bg-gray-700 dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-300" required>
+                            <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition mt-2 w-full focus:outline-none focus:ring-2 focus:ring-blue-300">Buy Now</button>
+                        </form>
+                    </div>
+                {% endfor %}
+            </div>
+            <!-- Quick View Modal -->
+            <div x-show="open" @open-quick-view.window="open = true; product = $event.detail" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 animate-fade-in">
+                <div class="bg-white dark:bg-gray-800 p-6 rounded-lg max-w-lg w-full">
+                    <h2 class="text-2xl font-bold mb-4" x-text="product.name"></h2>
+                    <img :src="product.image" :alt="product.name" class="w-full h-64 object-cover mb-4 rounded">
+                    <p class="text-gray-600 dark:text-gray-300 mb-2" x-text="product.description"></p>
+                    <p class="text-lg font-semibold mb-4" x-text="'KES ' + product.price"></p>
+                    <div class="flex justify-end space-x-2">
+                        <button @click="open = false" class="bg-gray-600 text-white px-4 py-2 rounded hover:bg-gray-700 transition focus:outline-none focus:ring-2 focus:ring-gray-300">Close</button>
+                        <a :href="'{% url 'buy_now' 0 %}'.replace('0', product.id)" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition focus:outline-none focus:ring-2 focus:ring-blue-300">Buy Now</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-gray-800 text-white p-4">
+        <div class="container mx-auto flex flex-col md:flex-row justify-between items-center">
+            <div>
+                <p>© 2025 Epicare Africa. All rights reserved.</p>
+                <p>Email: martinlubowa@outlook.com | Phone: +254101108886</p>
+            </div>
+            <div class="mt-4 md:mt-0">
+                <a href="https://www.instagram.com/epicareafrica" class="hover:underline focus:outline-none focus:ring-2 focus:ring-white rounded px-2 py-1">Instagram</a> |
+                <a href="https://www.linkedin.com/in/epi-care-africa-6079982b0" class="hover:underline focus:outline-none focus:ring-2 focus:ring-white rounded px-2 py-1">LinkedIn</a> |
+                <a href="https://www.tiktok.com/@epi.care.africa" class="hover:underline focus:outline-none focus:ring-2 focus:ring-white rounded px-2 py-1">TikTok</a>
+            </div>
+        </div>
+    </footer>
+
+    <style>
+        .animate-fade-in {
+            animation: fadeIn 0.5s ease-in;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</body>
+</html>
+
+
+<div class="mt-6 flex justify-center">
+                <div class="inline-flex space-x-2">
+                    {% if page_obj.has_previous %}
+                        <a href="?page={{ page_obj.previous_page_number }}" class="px-4 py-2 bg-gray-200 dark:bg-gray-700 rounded hover:bg-gray-300 dark:hover:bg-gray-600 transition focus:outline-none focus:ring-2 focus:ring-gray-300">Previous</a>
+                    {% endif %}
+                    <span class="px-4 py-2 bg-blue-600 text-white rounded">Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span>
+                    {% if page_obj.has_next %}
+                        <a href="?page={{ page_obj.next_page_number }}" class="px-4 py-2 bg-gray-200 dark:bg-gray-700 rounded hover:bg-gray-300 dark:hover:bg-gray-600 transition focus:outline-none focus:ring-2 focus:ring-gray-300">Next</a>
+                    {% endif %}
+                </div>
+            </div>
