@@ -433,90 +433,55 @@
     </section>
 
     <!-- Blog Section -->
-    <section id="blog-section" class="py-20 bg-white dark:bg-dark">
-        <div class="container mx-auto px-6">
-            <div class="text-center mb-12">
-                <h2 class="text-3xl md:text-4xl font-bold font-display mb-4">Epicare Blog</h2>
-                <p class="text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
-                    Latest insights, research, and stories about epilepsy care in Africa
-                </p>
-            </div>
-            
-            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-                <!-- Blog Post 1 -->
-                <article class="blog-card group">
-                    <div class="blog-card-inner h-full bg-white dark:bg-gray-800 rounded-xl overflow-hidden shadow-md">
-                        <div class="relative h-64 overflow-hidden">
-                            <img src="https://placehold.co/600x400/6A0DAD/FFFFFF?text=Epilepsy+Research" alt="Epilepsy Research" class="w-full h-full object-cover transition duration-500 group-hover:scale-110">
-                            <span class="blog-tag">Research</span>
-                        </div>
-                        <div class="p-6">
-                            <div class="flex items-center text-sm text-gray-500 dark:text-gray-400 mb-3">
-                                <span>June 15, 2025</span>
-                                <span class="mx-2">•</span>
-                                <span>5 min read</span>
-                            </div>
-                            <h3 class="text-xl font-semibold mb-3">Breakthrough in Epilepsy Treatment for African Patients</h3>
-                            <p class="text-gray-600 dark:text-gray-300 mb-4">New research shows promising results for localized treatment options that are more accessible in rural areas.</p>
-                            <a href="#" class="text-primary font-medium hover:underline flex items-center group">
-                                Read More <i class="fas fa-arrow-right ml-2 group-hover:translate-x-1 transition"></i>
-                            </a>
-                        </div>
-                    </div>
-                </article>
-                
-                <!-- Blog Post 2 -->
-                <article class="blog-card group">
-                    <div class="blog-card-inner h-full bg-white dark:bg-gray-800 rounded-xl overflow-hidden shadow-md">
-                        <div class="relative h-64 overflow-hidden">
-                            <img src="https://placehold.co/600x400/8655B9/FFFFFF?text=Community+Story" alt="Community Story" class="w-full h-full object-cover transition duration-500 group-hover:scale-110">
-                            <span class="blog-tag">Community</span>
-                        </div>
-                        <div class="p-6">
-                            <div class="flex items-center text-sm text-gray-500 dark:text-gray-400 mb-3">
-                                <span>May 28, 2025</span>
-                                <span class="mx-2">•</span>
-                                <span>8 min read</span>
-                            </div>
-                            <h3 class="text-xl font-semibold mb-3">How a Village in Kenya Overcame Epilepsy Stigma</h3>
-                            <p class="text-gray-600 dark:text-gray-300 mb-4">The inspiring story of how education and community support transformed attitudes towards epilepsy in rural Kenya.</p>
-                            <a href="#" class="text-primary font-medium hover:underline flex items-center group">
-                                Read More <i class="fas fa-arrow-right ml-2 group-hover:translate-x-1 transition"></i>
-                            </a>
-                        </div>
-                    </div>
-                </article>
-                
-                <!-- Blog Post 3 -->
-                <article class="blog-card group">
-                    <div class="blog-card-inner h-full bg-white dark:bg-gray-800 rounded-xl overflow-hidden shadow-md">
-                        <div class="relative h-64 overflow-hidden">
-                            <img src="https://placehold.co/600x400/FF6C0C/FFFFFF?text=Technology" alt="Technology" class="w-full h-full object-cover transition duration-500 group-hover:scale-110">
-                            <span class="blog-tag">Technology</span>
-                        </div>
-                        <div class="p-6">
-                            <div class="flex items-center text-sm text-gray-500 dark:text-gray-400 mb-3">
-                                <span>April 10, 2025</span>
-                                <span class="mx-2">•</span>
-                                <span>6 min read</span>
-                            </div>
-                            <h3 class="text-xl font-semibold mb-3">Mobile Apps Revolutionizing Epilepsy Management</h3>
-                            <p class="text-gray-600 dark:text-gray-300 mb-4">How smartphone applications are helping patients track seizures and medication across Africa.</p>
-                            <a href="#" class="text-primary font-medium hover:underline flex items-center group">
-                                Read More <i class="fas fa-arrow-right ml-2 group-hover:translate-x-1 transition"></i>
-                            </a>
-                        </div>
-                    </div>
-                </article>
-            </div>
-            
-            <div class="text-center mt-12">
-                <a href="{% url 'blog' %}" class="inline-flex items-center text-primary font-semibold hover:underline text-lg">
-                    View All Blog Posts <i class="fas fa-arrow-right ml-2"></i>
-                </a>
-            </div>
+<section id="blog-section" class="py-20 bg-white dark:bg-dark">
+    <div class="container mx-auto px-6">
+        <div class="text-center mb-12">
+            <h2 class="text-3xl md:text-4xl font-bold font-display mb-4">Epicare Blog</h2>
+            <p class="text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
+                Latest insights, research, and stories about epilepsy care in Africa
+            </p>
         </div>
-    </section>
+        
+        <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {% for post in latest_posts %}
+                <article class="blog-card group">
+                    <div class="blog-card-inner h-full bg-white dark:bg-gray-800 rounded-xl overflow-hidden shadow-md">
+                        <div class="relative h-64 overflow-hidden">
+                            {% if post.image %}
+                                <img src="{{ post.image.url }}" alt="{{ post.title }}" class="w-full h-full object-cover transition duration-500 group-hover:scale-110">
+                            {% else %}
+                                <img src="https://placehold.co/600x400/6A0DAD/FFFFFF?text={{ post.title|urlencode }}" alt="{{ post.title }}" class="w-full h-full object-cover transition duration-500 group-hover:scale-110">
+                            {% endif %}
+                            {% if post.tags %}
+                                <span class="blog-tag">{{ post.tags }}</span>
+                            {% endif %}
+                        </div>
+                        <div class="p-6">
+                            <div class="flex items-center text-sm text-gray-500 dark:text-gray-400 mb-3">
+                                <span>{{ post.created_at|date:"F d, Y" }}</span>
+                                <span class="mx-2">•</span>
+                                <span>5 min read</span> <!-- Adjust this if you have a field for reading time -->
+                            </div>
+                            <h3 class="text-xl font-semibold mb-3">{{ post.title }}</h3>
+                            <p class="text-gray-600 dark:text-gray-300 mb-4">{{ post.content|truncatewords:30 }}</p>
+                            <a href="{% url 'blog_detail' post.id %}" class="text-primary font-medium hover:underline flex items-center group">
+                                Read More <i class="fas fa-arrow-right ml-2 group-hover:translate-x-1 transition"></i>
+                            </a>
+                        </div>
+                    </div>
+                </article>
+            {% empty %}
+                <p class="text-center text-gray-600 dark:text-gray-300 col-span-full">No blog posts available.</p>
+            {% endfor %}
+        </div>
+        
+        <div class="text-center mt-12">
+            <a href="{% url 'blog' %}" class="inline-flex items-center text-primary font-semibold hover:underline text-lg">
+                View All Blog Posts <i class="fas fa-arrow-right ml-2"></i>
+            </a>
+        </div>
+    </div>
+</section>
 
     <!-- Interactive Africa Map Section -->
     <section class="py-20 bg-gray-50 dark:bg-gray-900">

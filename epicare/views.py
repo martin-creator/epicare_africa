@@ -12,7 +12,12 @@ from .forms import ContactForm, NewsletterForm, SearchForm
 
 def homepage(request):
     products = Product.objects.all()[:3]
-    featured_post = BlogPost.objects.filter(is_featured=True).first()
+    # featured_post = BlogPost.objects.filter(is_featured=True).first()
+    latest_posts = BlogPost.objects.all().order_by('-created_at')[:3]
+    # context = {
+    #     'latest_posts': latest_posts,
+    # }
+    # return render(request, 'home.html', context)
     newsletter_form = NewsletterForm()
     if request.method == 'POST':
         newsletter_form = NewsletterForm(request.POST)
@@ -23,7 +28,8 @@ def homepage(request):
     return render(request, 'homepage.html', {
         'products': products,
         'newsletter_form': newsletter_form,
-        'featured_post': featured_post,
+        # 'featured_post': featured_post,
+        'latest_posts': latest_posts,
     })
 
 def about(request):
@@ -128,9 +134,75 @@ def blog(request):
         'search_form': search_form,
     })
 
+# def blog_detail(request, post_id):
+#     post = get_object_or_404(BlogPost, id=post_id)
+#     return render(request, 'blog_detail.html', {'post': post})
+
+from django.shortcuts import render, get_object_or_404
+from .models import BlogPost
+import random
+
 def blog_detail(request, post_id):
     post = get_object_or_404(BlogPost, id=post_id)
-    return render(request, 'blog_detail.html', {'post': post})
+    
+    # Fetch up to 3 other blog posts, excluding the current one
+    related_posts = BlogPost.objects.exclude(id=post_id).order_by('-created_at')[:3]
+    
+    # List of epilepsy facts for placeholder content
+    epilepsy_facts = [
+        {
+            'title': 'Epilepsy Affects Millions',
+            'content': 'Over 50 million people worldwide live with epilepsy, with a significant portion in Africa.',
+            'image': 'https://placehold.co/600x400/6A0DAD/FFFFFF?text=Epilepsy+Facts'
+        },
+        {
+            'title': 'Seizures Are Diverse',
+            'content': 'Epilepsy can cause various seizure types, from brief lapses to convulsions.',
+            'image': 'https://placehold.co/600x400/8655B9/FFFFFF?text=Seizure+Info'
+        },
+        {
+            'title': 'Treatment Accessibility',
+            'content': 'Affordable anti-seizure medications can control seizures in about 70% of cases.',
+            'image': 'https://placehold.co/600x400/FF6C0C/FFFFFF?text=Treatment+Access'
+        },
+        {
+            'title': 'Stigma Reduction',
+            'content': 'Education and awareness can significantly reduce epilepsy-related stigma in communities.',
+            'image': 'https://placehold.co/600x400/6A0DAD/FFFFFF?text=Community+Awareness'
+        },
+        {
+            'title': 'Triggers Vary',
+            'content': 'Stress, lack of sleep, or flashing lights can trigger seizures in some individuals.',
+            'image': 'https://placehold.co/600x400/8655B9/FFFFFF?text=Seizure+Triggers'
+        }
+    ]
+    
+    # If fewer than 3 related posts, fill with random epilepsy facts
+    related_content = list(related_posts)
+    if len(related_content) < 3:
+        needed = 3 - len(related_content)
+        # Exclude facts already used by title to avoid duplicates
+        used_titles = [post.title for post in related_content]
+        available_facts = [fact for fact in epilepsy_facts if fact['title'] not in used_titles]
+        # Randomly select needed facts
+        selected_facts = random.sample(available_facts, min(needed, len(available_facts)))
+        related_content.extend(selected_facts)
+    
+    context = {
+        'post': post,
+        'related_content': related_content
+    }
+    return render(request, 'blog_detail.html', context)
+
+
+# # return the latest 3 blog posts for the homepage
+
+# def get_latest_blog_posts():
+#     return BlogPost.objects.all().order_by('-created_at')[:3]
+
+
+
+
 
 def contact(request):
     contact_form = ContactForm()

@@ -261,54 +261,57 @@
     </article>
 
     <!-- Related Posts -->
-    <section class="py-16 bg-gray-50 dark:bg-gray-900">
-        <div class="container mx-auto px-6">
-            <h2 class="text-2xl md:text-3xl font-bold font-display mb-8 text-center">More From Our Blog</h2>
-            
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                <!-- Placeholder for related posts - in a real app you'd loop through related posts -->
-                <div class="bg-white dark:bg-gray-800 rounded-xl overflow-hidden shadow-md hover:shadow-lg transition">
-                    <div class="relative h-48 overflow-hidden">
-                        <img src="https://placehold.co/600x400/6A0DAD/FFFFFF?text=Epilepsy+Research" alt="Related post" class="w-full h-full object-cover">
-                    </div>
-                    <div class="p-6">
-                        <h3 class="text-xl font-semibold mb-2">Breakthrough in Epilepsy Treatment</h3>
-                        <p class="text-gray-600 dark:text-gray-300 mb-4">New research shows promising results for localized treatment options...</p>
-                        <a href="#" class="text-primary font-medium hover:underline">Read More</a>
-                    </div>
-                </div>
-                
-                <div class="bg-white dark:bg-gray-800 rounded-xl overflow-hidden shadow-md hover:shadow-lg transition">
-                    <div class="relative h-48 overflow-hidden">
-                        <img src="https://placehold.co/600x400/8655B9/FFFFFF?text=Community+Story" alt="Related post" class="w-full h-full object-cover">
-                    </div>
-                    <div class="p-6">
-                        <h3 class="text-xl font-semibold mb-2">Overcoming Epilepsy Stigma</h3>
-                        <p class="text-gray-600 dark:text-gray-300 mb-4">How education transformed attitudes in rural communities...</p>
-                        <a href="#" class="text-primary font-medium hover:underline">Read More</a>
-                    </div>
-                </div>
-                
-                <div class="bg-white dark:bg-gray-800 rounded-xl overflow-hidden shadow-md hover:shadow-lg transition">
-                    <div class="relative h-48 overflow-hidden">
-                        <img src="https://placehold.co/600x400/FF6C0C/FFFFFF?text=Technology" alt="Related post" class="w-full h-full object-cover">
-                    </div>
-                    <div class="p-6">
-                        <h3 class="text-xl font-semibold mb-2">Mobile Apps for Epilepsy</h3>
-                        <p class="text-gray-600 dark:text-gray-300 mb-4">How smartphone applications are helping patients track seizures...</p>
-                        <a href="#" class="text-primary font-medium hover:underline">Read More</a>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="text-center mt-12">
-                <a href="{% url 'blog' %}" class="inline-flex items-center text-primary font-semibold hover:underline text-lg">
-                    View All Blog Posts <i class="fas fa-arrow-right ml-2"></i>
-                </a>
-            </div>
-        </div>
-    </section>
 
+<!-- Related Posts -->
+<section class="py-16 bg-gray-50 dark:bg-gray-900">
+    <div class="container mx-auto px-6">
+        {% if item.id %}
+        <h2 class="text-2xl md:text-3xl font-bold font-display mb-8 text-center">More From Our Blog</h2>
+        {% else %}
+        <h2 class="text-2xl md:text-3xl font-bold font-display mb-8 text-center">Related Epilepsy Facts</h2>
+        {% endif %}
+        
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {% for item in related_content %}
+                <div class="bg-white dark:bg-gray-800 rounded-xl overflow-hidden shadow-md hover:shadow-lg transition">
+                    <div class="relative h-48 overflow-hidden">
+                        {% if item.id %}
+                            <!-- Blog Post -->
+                            {% if item.image %}
+                                <img src="{{ item.image.url }}" alt="{{ item.title }}" class="w-full h-full object-cover">
+                            {% else %}
+                                <img src="https://placehold.co/600x400/6A0DAD/FFFFFF?text={{ item.title|urlencode }}" alt="{{ item.title }}" class="w-full h-full object-cover">
+                            {% endif %}
+                        {% else %}
+                            <!-- Epilepsy Fact -->
+                            <img src="{{ item.image }}" alt="{{ item.title }}" class="w-full h-full object-cover">
+                        {% endif %}
+                    </div>
+                    <div class="p-6">
+                        <h3 class="text-xl font-semibold mb-2">{{ item.title }}</h3>
+                        <p class="text-gray-600 dark:text-gray-300 mb-4">{{ item.content|truncatewords:20 }}</p>
+                        {% if item.id %}
+                            <!-- Blog Post Link -->
+                            <a href="{% url 'blog_detail' item.id %}" class="text-primary font-medium hover:underline">Read More</a>
+                        {% else %}
+                            <!-- Fact Label -->
+                            <span class="text-gray-500 dark:text-gray-400 font-medium">Fact</span>
+                        {% endif %}
+                    </div>
+                </div>
+            {% empty %}
+                <p class="text-center text-gray-600 dark:text-gray-300 col-span-full">No related content available.</p>
+            {% endfor %}
+        </div>
+        
+        <div class="text-center mt-12">
+            <a href="{% url 'blog' %}" class="inline-flex items-center text-primary font-semibold hover:underline text-lg">
+                View All Blog Posts <i class="fas fa-arrow-right ml-2"></i>
+            </a>
+        </div>
+    </div>
+</section>
     <!-- Newsletter Section -->
     <section class="py-16 bg-white dark:bg-dark">
         <div class="container mx-auto px-6 max-w-4xl">
