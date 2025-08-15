@@ -53,3 +53,26 @@ class NewsletterSubscription(models.Model):
 
     def __str__(self):
         return self.email
+
+class JobOpening(models.Model):
+    title = models.CharField(max_length=100)
+    description = models.TextField()
+    department = models.CharField(max_length=50)
+    location = models.CharField(max_length=100)
+    created_at = models.DateTimeField(auto_now_add=True)
+    is_active = models.BooleanField(default=True)
+
+    def __str__(self):
+        return self.title
+
+class JobApplication(models.Model):
+    name = models.CharField(max_length=100)
+    email = models.EmailField()
+    phone = models.CharField(max_length=20)
+    position = models.ForeignKey(JobOpening, on_delete=models.SET_NULL, null=True)
+    resume = models.FileField(upload_to='resumes/')
+    cover_letter = models.TextField()
+    submitted_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.name} - {self.position.title}"

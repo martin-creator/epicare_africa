@@ -1,0 +1,652 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en" x-data="{ darkMode: localStorage.getItem('darkMode') === 'true', mobileMenuOpen: false, chatOpen: false }" :class="{ 'dark': darkMode }">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Careers | EPICARE - Transforming Epilepsy Care in Africa</title>
+    <meta name="description" content="Join our team at Epicare Africa and help revolutionize epilepsy care across the continent">
+    
+    <!-- Tailwind with Epicare colors -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                fontFamily: {
+                    sans: ['Inter', 'sans-serif'],
+                    display: ['Calibre', 'Inter', 'sans-serif'],
+                },
+                extend: {
+                    colors: {
+                        primary: '#6A0DAD',
+                        secondary: '#8655B9',
+                        accent: '#FF6C0C',
+                        dark: '#121212',
+                        light: '#FAFAFA',
+                    },
+                    animation: {
+                        'fade-in': 'fadeIn 0.8s ease-out',
+                        'slide-up': 'slideUp 0.6s ease-out',
+                        'float': 'float 6s ease-in-out infinite',
+                    },
+                    keyframes: {
+                        fadeIn: {
+                            '0%': { opacity: '0' },
+                            '100%': { opacity: '1' },
+                        },
+                        slideUp: {
+                            '0%': { transform: 'translateY(20px)', opacity: '0' },
+                            '100%': { transform: 'translateY(0)', opacity: '1' },
+                        },
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0)' },
+                            '50%': { transform: 'translateY(-15px)' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.cdnfonts.com/css/calibre" rel="stylesheet">
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- Alpine JS -->
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+
+    <!-- GSAP -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.4/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.4/ScrollTrigger.min.js"></script>
+    
+    <style>
+        :root {
+            --primary: #6A0DAD;
+            --secondary: #8655B9;
+            --accent: #FF6C0C;
+        }
+        
+        .hero-gradient {
+            background: linear-gradient(135deg, #6A0DAD 0%, #8655B9 100%);
+        }
+        
+        .card-hover {
+            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+        }
+        
+        .card-hover:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 25px -5px rgba(106, 13, 173, 0.2), 0 10px 10px -5px rgba(106, 13, 173, 0.1);
+        }
+        
+        .nav-link {
+            position: relative;
+        }
+        
+        .nav-link:after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: -4px;
+            left: 0;
+            background-color: var(--primary);
+            transition: width 0.3s ease;
+        }
+        
+        .nav-link:hover:after {
+            width: 100%;
+        }
+        
+        .job-card {
+            border-left: 4px solid #6A0DAD;
+        }
+    </style>
+</head>
+<body class="bg-light dark:bg-dark text-gray-900 dark:text-white transition-colors duration-300 scroll-smooth">
+    <!-- Navigation -->
+    <header class="sticky top-0 z-50 bg-white/80 dark:bg-dark/80 backdrop-blur-md shadow-sm">
+        <div class="container mx-auto px-6 py-4">
+            <div class="flex justify-between items-center">
+                <a href="{% url 'homepage' %}" class="text-3xl font-bold font-display flex items-center group">
+                    <span class="text-primary group-hover:text-secondary transition">EPI</span>
+                    <span class="text-gray-900 dark:text-white group-hover:text-primary transition">CARE</span>
+                    <span class="ml-2 text-xs bg-accent text-white px-2 py-1 rounded-full animate-pulse">Africa</span>
+                </a>
+                
+                <!-- Desktop Navigation -->
+                <nav class="hidden md:flex space-x-8 items-center">
+                    <a href="{% url 'homepage' %}" class="nav-link text-gray-600 dark:text-gray-300 font-medium">Home</a>
+                    <a href="{% url 'about' %}" class="nav-link text-gray-600 dark:text-gray-300 font-medium">About</a>
+                    <a href="{% url 'shop' %}" class="nav-link text-gray-600 dark:text-gray-300 font-medium">Shop</a>
+                    <a href="{% url 'blog' %}" class="nav-link text-gray-600 dark:text-gray-300 font-medium">Blog</a>
+                    <a href="{% url 'careers' %}" class="nav-link text-gray-600 dark:text-gray-300 font-medium">Careers</a>
+                    <a href="{% url 'contact' %}" class="nav-link text-gray-600 dark:text-gray-gray-300 font-medium">Contact</a>
+                    <button @click="chatOpen = true" class="bg-primary text-white px-6 py-2 rounded-lg hover:bg-secondary transition flex items-center">
+                        <i class="fas fa-comment-medical mr-2"></i> Live Chat
+                    </button>
+                </nav>
+                
+                <!-- Mobile Menu Button -->
+                <button @click="mobileMenuOpen = !mobileMenuOpen" class="md:hidden text-2xl focus:outline-none">
+                    <i x-show="!mobileMenuOpen" class="fas fa-bars"></i>
+                    <i x-show="mobileMenuOpen" class="fas fa-times"></i>
+                </button>
+            </div>
+            
+            <!-- Mobile Menu -->
+            <div x-show="mobileMenuOpen" x-transition class="md:hidden mt-4 py-4 border-t border-gray-200 dark:border-gray-700">
+                <div class="flex flex-col space-y-4">
+                    <a href="{% url 'homepage' %}" class="px-3 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition font-medium">Home</a>
+                    <a href="{% url 'about' %}" class="px-3 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition font-medium">About</a>
+                    <a href="{% url 'shop' %}" class="px-3 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition font-medium">Shop</a>
+                    <a href="{% url 'blog' %}" class="px-3 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition font-medium">Blog</a>
+                    <a href="{% url 'careers' %}" class="px-3 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition font-medium">Careers</a>
+                    <a href="{% url 'contact' %}" class="px-3 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition font-medium">Contact</a>
+                    <button @click="chatOpen = true" class="w-full bg-primary text-white px-6 py-3 rounded-lg hover:bg-secondary transition font-semibold mt-4 flex items-center justify-center">
+                        <i class="fas fa-comment-medical mr-2"></i> Live Chat
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Live Chat Widget -->
+    <div x-data="{ chatOpen: false }" class="fixed bottom-4 right-4 z-50">
+        <button @click="chatOpen = !chatOpen" class="bg-primary text-white p-4 rounded-full shadow-xl hover:bg-secondary transition transform hover:scale-110">
+            <i x-show="!chatOpen" class="fas fa-comment-medical text-xl"></i>
+            <i x-show="chatOpen" class="fas fa-times text-xl"></i>
+        </button>
+        <div x-show="chatOpen" x-transition class="absolute bottom-20 right-0 w-80 bg-white dark:bg-gray-800 rounded-xl shadow-xl overflow-hidden">
+            <div class="bg-primary text-white p-4">
+                <h3 class="font-semibold">Epicare Support</h3>
+                <p class="text-sm opacity-90">Ask our epilepsy specialists</p>
+            </div>
+            <div class="p-4 h-64 overflow-y-auto">
+                <div class="flex mb-4">
+                    <div class="bg-gray-100 dark:bg-gray-700 rounded-lg p-3 max-w-xs">
+                        <p class="text-sm">Hello! I'm here to answer your epilepsy questions. How can I help?</p>
+                    </div>
+                </div>
+            </div>
+            <div class="border-t border-gray-200 dark:border-gray-700 p-4">
+                <div class="flex items-center">
+                    <input type="text" placeholder="Type your question..." class="flex-grow border rounded-l-lg px-4 py-2 focus:outline-none focus:ring-1 focus:ring-primary dark:bg-gray-700">
+                    <button class="bg-primary text-white px-4 py-2 rounded-r-lg hover:bg-secondary transition">
+                        <i class="fas fa-paper-plane"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Hero Section -->
+    <section class="hero-gradient text-white overflow-hidden relative py-32">
+        <div class="container mx-auto px-6 relative z-10">
+            <div class="max-w-4xl">
+                <h1 class="text-4xl md:text-5xl lg:text-6xl font-bold font-display mb-6 leading-tight">
+                    <span class="text-white bg-clip-text bg-gradient-to-r from-white to-accent">Join Our Team</span><br>
+                    <span class="text-accent">Transform Epilepsy Care</span>
+                </h1>
+                <p class="text-xl md:text-2xl mb-8 opacity-90 max-w-2xl">
+                    Help build innovative solutions that empower communities across Africa
+                </p>
+            </div>
+        </div>
+        <div class="absolute inset-0 opacity-10">
+            <div class="absolute inset-0 bg-[url('https://placehold.co/600x400/6A0DAD/FFFFFF?text=EPICARE')] bg-repeat opacity-20"></div>
+        </div>
+    </section>
+
+    <!-- Why Join Us Section -->
+    <section class="py-20 bg-white dark:bg-dark">
+        <div class="container mx-auto px-6">
+            <div class="flex flex-col lg:flex-row items-center gap-12">
+                <div class="lg:w-1/2">
+                    <div class="flex items-center mb-4">
+                        <div class="w-8 h-1 bg-primary mr-3"></div>
+                        <span class="text-sm font-semibold text-primary uppercase tracking-wider">Why Epicare?</span>
+                    </div>
+                    <h2 class="text-3xl md:text-4xl font-bold font-display mb-6">More Than Just a Job</h2>
+                    <p class="text-lg text-gray-600 dark:text-gray-300 mb-6">
+                        At Epicare Africa, you'll be part of a passionate team making a real difference in the lives of people with epilepsy across the continent. Every role contributes directly to our mission.
+                    </p>
+                    <div class="grid grid-cols-2 gap-6 mb-8">
+                        <div class="flex items-start">
+                            <div class="bg-primary/10 p-3 rounded-lg mr-4">
+                                <i class="fas fa-heart text-primary"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-semibold mb-1">Purpose-Driven Work</h4>
+                                <p class="text-gray-600 dark:text-gray-300 text-sm">Direct impact on epilepsy care in Africa</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start">
+                            <div class="bg-primary/10 p-3 rounded-lg mr-4">
+                                <i class="fas fa-users text-primary"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-semibold mb-1">Collaborative Team</h4>
+                                <p class="text-gray-600 dark:text-gray-300 text-sm">Work with passionate professionals</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start">
+                            <div class="bg-primary/10 p-3 rounded-lg mr-4">
+                                <i class="fas fa-chart-line text-primary"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-semibold mb-1">Growth Opportunities</h4>
+                                <p class="text-gray-600 dark:text-gray-300 text-sm">Continuous learning and development</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start">
+                            <div class="bg-primary/10 p-3 rounded-lg mr-4">
+                                <i class="fas fa-globe-africa text-primary"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-semibold mb-1">Pan-African Impact</h4>
+                                <p class="text-gray-600 dark:text-gray-300 text-sm">Work across multiple countries</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="lg:w-1/2 relative">
+                    <div class="relative rounded-2xl overflow-hidden shadow-xl">
+                        <div class="absolute -inset-4 bg-primary/20 rounded-3xl blur-lg rotate-2"></div>
+                        <img src="https://placehold.co/600x400/6A0DAD/FFFFFF?text=Epicare+Team" alt="Epicare Team" class="w-full rounded-2xl">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Job Openings Section -->
+    <section class="py-20 bg-gray-50 dark:bg-gray-900">
+        <div class="container mx-auto px-6">
+            <div class="text-center mb-16">
+                <h2 class="text-3xl md:text-4xl font-bold font-display mb-4">Current Opportunities</h2>
+                <p class="text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
+                    Join us in transforming epilepsy care across Africa
+                </p>
+            </div>
+            
+            {% if job_openings %}
+            <div class="grid md:grid-cols-2 gap-8 max-w-5xl mx-auto">
+                {% for job in job_openings %}
+                <div class="bg-white dark:bg-gray-800 rounded-xl p-8 shadow-lg card-hover job-card">
+                    <div class="flex justify-between items-start mb-4">
+                        <div>
+                            <h3 class="text-xl font-bold font-display mb-1">{{ job.title }}</h3>
+                            <div class="flex items-center text-sm text-gray-500 dark:text-gray-400">
+                                <i class="fas fa-map-marker-alt mr-2"></i>
+                                <span>{{ job.location }}</span>
+                            </div>
+                        </div>
+                        <span class="bg-primary/10 text-primary text-xs font-semibold px-3 py-1 rounded-full">{{ job.department }}</span>
+                    </div>
+                    <p class="text-gray-600 dark:text-gray-300 mb-6">{{ job.description|truncatewords:30 }}</p>
+                    <div class="flex justify-between items-center">
+                        <div class="text-sm text-gray-500 dark:text-gray-400">
+                            <i class="fas fa-clock mr-1"></i> Posted {{ job.posted_date|timesince }} ago
+                        </div>
+                        <button onclick="document.getElementById('application-form').scrollIntoView({behavior: 'smooth'})"
+                                class="bg-primary text-white px-6 py-2 rounded-lg hover:bg-secondary transition flex items-center">
+                            Apply Now <i class="fas fa-arrow-right ml-2"></i>
+                        </button>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            {% else %}
+            <div class="bg-white dark:bg-gray-800 rounded-xl p-8 shadow-lg text-center max-w-2xl mx-auto">
+                <div class="w-20 h-20 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-6">
+                    <i class="fas fa-briefcase text-primary text-2xl"></i>
+                </div>
+                <h3 class="text-xl font-semibold mb-2">No Current Openings</h3>
+                <p class="text-gray-600 dark:text-gray-300 mb-6">
+                    We don't have any open positions at the moment, but check back soon or send us your resume for future opportunities.
+                </p>
+                <a href="#application-form" class="inline-flex items-center text-primary font-semibold hover:underline text-lg">
+                    Submit General Application <i class="fas fa-arrow-right ml-2"></i>
+                </a>
+            </div>
+            {% endif %}
+        </div>
+    </section>
+
+    <!-- Application Form Section -->
+    <section id="application-form" class="py-20 bg-white dark:bg-dark">
+        <div class="container mx-auto px-6">
+            <div class="max-w-3xl mx-auto">
+                <div class="text-center mb-12">
+                    <h2 class="text-3xl md:text-4xl font-bold font-display mb-4">Apply Now</h2>
+                    <p class="text-gray-600 dark:text-gray-300">
+                        Ready to join our mission? Fill out the application form below.
+                    </p>
+                </div>
+                
+                {% if messages %}
+                <div class="mb-8">
+                    {% for message in messages %}
+                    <div class="p-4 rounded-lg {% if message.tags == 'success' %}bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200{% else %}bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200{% endif %}">
+                        {{ message }}
+                    </div>
+                    {% endfor %}
+                </div>
+                {% endif %}
+                
+                <form method="POST" enctype="multipart/form-data" class="space-y-6 bg-gray-50 dark:bg-gray-800 p-8 rounded-xl shadow-md">
+                    {% csrf_token %}
+                    <div>
+                        <label for="{{ application_form.name.id_for_label }}" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Full Name</label>
+                        {{ application_form.name }}
+                        {% if application_form.name.errors %}
+                            <p class="text-red-500 text-sm mt-1">{{ application_form.name.errors }}</p>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="grid md:grid-cols-2 gap-6">
+                        <div>
+                            <label for="{{ application_form.email.id_for_label }}" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Email Address</label>
+                            {{ application_form.email }}
+                            {% if application_form.email.errors %}
+                                <p class="text-red-500 text-sm mt-1">{{ application_form.email.errors }}</p>
+                            {% endif %}
+                        </div>
+                        <div>
+                            <label for="{{ application_form.phone.id_for_label }}" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Phone Number</label>
+                            {{ application_form.phone }}
+                            {% if application_form.phone.errors %}
+                                <p class="text-red-500 text-sm mt-1">{{ application_form.phone.errors }}</p>
+                            {% endif %}
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <label for="{{ application_form.position.id_for_label }}" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Position Applying For</label>
+                        {{ application_form.position }}
+                        {% if application_form.position.errors %}
+                            <p class="text-red-500 text-sm mt-1">{{ application_form.position.errors }}</p>
+                        {% endif %}
+                    </div>
+                    
+                    <div>
+                        <label for="{{ application_form.resume.id_for_label }}" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Resume (PDF only)</label>
+                        <div class="mt-1 flex items-center">
+                            <label for="resume" class="cursor-pointer bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2">
+                                <i class="fas fa-file-pdf mr-2"></i> Choose File
+                                {{ application_form.resume }}
+                            </label>
+                            <span id="file-name" class="ml-3 text-sm text-gray-500 dark:text-gray-400">No file chosen</span>
+                        </div>
+                        {% if application_form.resume.errors %}
+                            <p class="text-red-500 text-sm mt-1">{{ application_form.resume.errors }}</p>
+                        {% endif %}
+                    </div>
+                    
+                    <div>
+                        <label for="{{ application_form.cover_letter.id_for_label }}" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Cover Letter</label>
+                        {{ application_form.cover_letter }}
+                        {% if application_form.cover_letter.errors %}
+                            <p class="text-red-500 text-sm mt-1">{{ application_form.cover_letter.errors }}</p>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="pt-4">
+                        <button type="submit" name="application_submit" class="w-full bg-primary text-white px-6 py-3 rounded-lg hover:bg-secondary transition font-semibold flex items-center justify-center">
+                            <i class="fas fa-paper-plane mr-2"></i> Submit Application
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <!-- Benefits Section -->
+    <section class="py-20 bg-gray-50 dark:bg-gray-900">
+        <div class="container mx-auto px-6">
+            <div class="text-center mb-16">
+                <h2 class="text-3xl md:text-4xl font-bold font-display mb-4">Our Benefits</h2>
+                <p class="text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
+                    We take care of our team so they can focus on transforming epilepsy care
+                </p>
+            </div>
+            
+            <div class="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto">
+                <div class="bg-white dark:bg-gray-800 rounded-xl p-8 shadow-md card-hover">
+                    <div class="w-14 h-14 bg-primary/10 rounded-xl flex items-center justify-center mb-6">
+                        <i class="fas fa-hand-holding-medical text-primary text-xl"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold mb-4">Health & Wellness</h3>
+                    <ul class="space-y-3 text-gray-600 dark:text-gray-300">
+                        <li class="flex items-start">
+                            <i class="fas fa-check-circle text-primary mt-1 mr-3 text-sm"></i>
+                            <span>Comprehensive health insurance</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-check-circle text-primary mt-1 mr-3 text-sm"></i>
+                            <span>Mental health support</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-check-circle text-primary mt-1 mr-3 text-sm"></i>
+                            <span>Wellness programs</span>
+                        </li>
+                    </ul>
+                </div>
+                
+                <div class="bg-white dark:bg-gray-800 rounded-xl p-8 shadow-md card-hover">
+                    <div class="w-14 h-14 bg-primary/10 rounded-xl flex items-center justify-center mb-6">
+                        <i class="fas fa-graduation-cap text-primary text-xl"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold mb-4">Learning & Growth</h3>
+                    <ul class="space-y-3 text-gray-600 dark:text-gray-300">
+                        <li class="flex items-start">
+                            <i class="fas fa-check-circle text-primary mt-1 mr-3 text-sm"></i>
+                            <span>Professional development budget</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-check-circle text-primary mt-1 mr-3 text-sm"></i>
+                            <span>Conference attendance</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-check-circle text-primary mt-1 mr-3 text-sm"></i>
+                            <span>Mentorship programs</span>
+                        </li>
+                    </ul>
+                </div>
+                
+                <div class="bg-white dark:bg-gray-800 rounded-xl p-8 shadow-md card-hover">
+                    <div class="w-14 h-14 bg-primary/10 rounded-xl flex items-center justify-center mb-6">
+                        <i class="fas fa-heart text-primary text-xl"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold mb-4">Work-Life Balance</h3>
+                    <ul class="space-y-3 text-gray-600 dark:text-gray-300">
+                        <li class="flex items-start">
+                            <i class="fas fa-check-circle text-primary mt-1 mr-3 text-sm"></i>
+                            <span>Flexible work arrangements</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-check-circle text-primary mt-1 mr-3 text-sm"></i>
+                            <span>Generous leave policy</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-check-circle text-primary mt-1 mr-3 text-sm"></i>
+                            <span>Team retreats</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="py-20 bg-gradient-to-r from-primary to-secondary text-white">
+        <div class="container mx-auto px-6 text-center">
+            <h2 class="text-3xl md:text-4xl font-bold font-display mb-6">Questions About Working With Us?</h2>
+            <p class="text-xl opacity-90 max-w-2xl mx-auto mb-8">
+                Reach out to our HR team for more information about careers at Epicare Africa
+            </p>
+            <div class="flex flex-col sm:flex-row justify-center gap-4">
+                <a href="{% url 'contact' %}" class="bg-white text-primary px-8 py-4 rounded-lg font-semibold hover:bg-opacity-90 transition transform hover:scale-105">
+                    Contact HR <i class="fas fa-envelope ml-2"></i>
+                </a>
+                <a href="{% url 'about' %}" class="border-2 border-white text-white px-8 py-4 rounded-lg font-semibold hover:bg-white hover:text-primary transition transform hover:scale-105">
+                    Learn About Us <i class="fas fa-arrow-right ml-2"></i>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-gray-900 text-white pt-20 pb-10">
+        <div class="container mx-auto px-6">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-12">
+                <div>
+                    <a href="{% url 'homepage' %}" class="text-3xl font-bold font-display flex items-center group mb-6">
+                        <span class="text-primary group-hover:text-secondary transition">EPI</span>
+                        <span class="text-white group-hover:text-primary transition">CARE</span>
+                        <span class="ml-2 text-xs bg-accent text-white px-2 py-1 rounded-full">Africa</span>
+                    </a>
+                    <p class="text-gray-400 mb-6">
+                        Transforming epilepsy care across Africa through innovative technology and community education.
+                    </p>
+                    <div class="flex space-x-4">
+                        <a href="#" class="text-gray-400 hover:text-white transition">
+                            <i class="fab fa-facebook-f"></i>
+                        </a>
+                        <a href="#" class="text-gray-400 hover:text-white transition">
+                            <i class="fab fa-twitter"></i>
+                        </a>
+                        <a href="#" class="text-gray-400 hover:text-white transition">
+                            <i class="fab fa-instagram"></i>
+                        </a>
+                        <a href="#" class="text-gray-400 hover:text-white transition">
+                            <i class="fab fa-linkedin-in"></i>
+                        </a>
+                        <a href="#" class="text-gray-400 hover:text-white transition">
+                            <i class="fab fa-youtube"></i>
+                        </a>
+                    </div>
+                </div>
+                
+                <div>
+                    <h3 class="text-lg font-semibold mb-6">Quick Links</h3>
+                    <ul class="space-y-3">
+                        <li><a href="{% url 'homepage' %}" class="text-gray-400 hover:text-white transition">Home</a></li>
+                        <li><a href="{% url 'about' %}" class="text-gray-400 hover:text-white transition">About Us</a></li>
+                        <li><a href="{% url 'shop' %}" class="text-gray-400 hover:text-white transition">Shop</a></li>
+                        <li><a href="{% url 'blog' %}" class="text-gray-400 hover:text-white transition">Blog</a></li>
+                        <li><a href="{% url 'careers' %}" class="text-gray-400 hover:text-white transition">Careers</a></li>
+                        <li><a href="{% url 'contact' %}" class="text-gray-400 hover:text-white transition">Contact</a></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h3 class="text-lg font-semibold mb-6">Resources</h3>
+                    <ul class="space-y-3">
+                        <li><a href="#" class="text-gray-400 hover:text-white transition">Epilepsy Facts</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition">First Aid Guide</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition">Treatment Options</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition">Research Papers</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition">FAQs</a></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h3 class="text-lg font-semibold mb-6">Contact Us</h3>
+                    <ul class="space-y-3 text-gray-400">
+                        <li class="flex items-start">
+                            <i class="fas fa-map-marker-alt mt-1 mr-3 text-primary"></i>
+                            <span>123 Health Plaza, Nairobi, Kenya</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-phone-alt mt-1 mr-3 text-primary"></i>
+                            <span>+254 700 123 456</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-envelope mt-1 mr-3 text-primary"></i>
+                            <span>info@epicare.africa</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-briefcase mt-1 mr-3 text-primary"></i>
+                            <span>careers@epicare.africa</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="border-t border-gray-800 pt-8">
+                <div class="flex flex-col md:flex-row justify-between items-center">
+                    <p class="text-gray-500 text-sm mb-4 md:mb-0">
+                        &copy; 2023 Epicare Africa. All rights reserved.
+                    </p>
+                    <div class="flex space-x-6">
+                        <a href="#" class="text-gray-500 hover:text-white text-sm transition">Privacy Policy</a>
+                        <a href="#" class="text-gray-500 hover:text-white text-sm transition">Terms of Service</a>
+                        <a href="#" class="text-gray-500 hover:text-white text-sm transition">Cookie Policy</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Back to Top Button -->
+    <button id="backToTop" class="fixed bottom-6 right-6 bg-primary text-white p-3 rounded-full shadow-lg opacity-0 invisible transition-all duration-300 hover:bg-secondary">
+        <i class="fas fa-arrow-up"></i>
+    </button>
+
+    <script>
+        // Back to Top Button
+        const backToTopButton = document.getElementById('backToTop');
+        
+        window.addEventListener('scroll', () => {
+            if (window.pageYOffset > 300) {
+                backToTopButton.classList.remove('opacity-0', 'invisible');
+                backToTopButton.classList.add('opacity-100', 'visible');
+            } else {
+                backToTopButton.classList.remove('opacity-100', 'visible');
+                backToTopButton.classList.add('opacity-0', 'invisible');
+            }
+        });
+        
+        backToTopButton.addEventListener('click', () => {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+
+        // File name display for resume upload
+        document.getElementById('id_resume').addEventListener('change', function(e) {
+            const fileName = e.target.files[0] ? e.target.files[0].name : 'No file chosen';
+            document.getElementById('file-name').textContent = fileName;
+        });
+
+        // GSAP Animations
+        gsap.registerPlugin(ScrollTrigger);
+        
+        document.querySelectorAll('section').forEach(section => {
+            gsap.from(section, {
+                scrollTrigger: {
+                    trigger: section,
+                    start: "top 80%",
+                    toggleActions: "play none none none"
+                },
+                opacity: 0,
+                y: 50,
+                duration: 0.8,
+                ease: "power2.out"
+            });
+        });
+
+        // Initialize dark mode from localStorage
+        document.addEventListener('DOMContentLoaded', () => {
+            const darkMode = localStorage.getItem('darkMode') === 'true';
+            if (darkMode) {
+                document.documentElement.classList.add('dark');
+            }
+        });
+    </script>
+</body>
+</html>

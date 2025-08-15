@@ -1,5 +1,5 @@
 from django import forms
-from .models import ContactSubmission, NewsletterSubscription
+from .models import ContactSubmission, NewsletterSubscription, JobOpening, JobApplication
 
 class ContactForm(forms.ModelForm):
     class Meta:
@@ -24,3 +24,16 @@ class SearchForm(forms.Form):
         'class': 'w-full p-2 border rounded',
         'placeholder': 'Search...',
     }))
+
+class JobApplicationForm(forms.ModelForm):
+    class Meta:
+        model = JobApplication
+        fields = ['name', 'email', 'phone', 'position', 'resume', 'cover_letter']
+        widgets = {
+            'name': forms.TextInput(attrs={'class': 'w-full p-2 border rounded', 'required': True}),
+            'email': forms.EmailInput(attrs={'class': 'w-full p-2 border rounded', 'required': True}),
+            'phone': forms.TextInput(attrs={'class': 'w-full p-2 border rounded', 'required': True}),
+            'position': forms.Select(attrs={'class': 'w-full p-2 border rounded', 'required': True}),
+            'resume': forms.FileInput(attrs={'class': 'w-full p-2 border rounded', 'required': True, 'accept': '.pdf'}),
+            'cover_letter': forms.Textarea(attrs={'class': 'w-full p-2 border rounded', 'rows': 4, 'required': True}),
+        }

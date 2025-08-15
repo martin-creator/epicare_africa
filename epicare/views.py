@@ -7,17 +7,12 @@ from django.db.models import Q
 import csv
 import uuid
 import requests
-from .models import Product, Category, BlogPost, Order, ContactSubmission, NewsletterSubscription
-from .forms import ContactForm, NewsletterForm, SearchForm
+from .models import Product, Category, BlogPost, Order, ContactSubmission, NewsletterSubscription, JobOpening, JobApplication
+from .forms import ContactForm, NewsletterForm, SearchForm, JobApplicationForm
 
 def homepage(request):
     products = Product.objects.all()[:3]
-    # featured_post = BlogPost.objects.filter(is_featured=True).first()
     latest_posts = BlogPost.objects.all().order_by('-created_at')[:3]
-    # context = {
-    #     'latest_posts': latest_posts,
-    # }
-    # return render(request, 'home.html', context)
     newsletter_form = NewsletterForm()
     if request.method == 'POST':
         newsletter_form = NewsletterForm(request.POST)
@@ -28,7 +23,6 @@ def homepage(request):
     return render(request, 'homepage.html', {
         'products': products,
         'newsletter_form': newsletter_form,
-        # 'featured_post': featured_post,
         'latest_posts': latest_posts,
     })
 
@@ -71,14 +65,12 @@ def buy_now(request, product_id):
         email = request.POST.get('email', 'customer@example.com')
         phone = request.POST.get('phone', '254101108886')
         if quantity <= product.stock:
-            # Create order
             order = Order.objects.create(
                 product=product,
                 quantity=quantity,
                 email=email,
                 phone=phone,
             )
-            # Simplified Pesapal integration
             pesapal_url = "https://demo.pesapal.com/api/PostPesapalDirectOrderV4"
             params = {
                 'amount': float(product.price * quantity),
@@ -96,7 +88,6 @@ def buy_now(request, product_id):
                 if response.status_code == 200:
                     product.stock -= quantity
                     product.save()
-                    # Send order confirmation email
                     send_mail(
                         subject=f'Epicare Africa Order #{order.id} Confirmation',
                         message=f'Thank you for your order!\n\nProduct: {product.name}\nQuantity: {quantity}\nTotal: KES {product.price * quantity}\nStatus: {order.status}',
@@ -125,7 +116,7 @@ def blog(request):
         query = search_form.cleaned_data['query']
         posts = posts.filter(Q(title__icontains=query) | Q(content__icontains=query))
     
-    paginator = Paginator(posts, 5)  # 5 posts per page
+    paginator = Paginator(posts, 5)
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
     
@@ -134,21 +125,9 @@ def blog(request):
         'search_form': search_form,
     })
 
-# def blog_detail(request, post_id):
-#     post = get_object_or_404(BlogPost, id=post_id)
-#     return render(request, 'blog_detail.html', {'post': post})
-
-from django.shortcuts import render, get_object_or_404
-from .models import BlogPost
-import random
-
 def blog_detail(request, post_id):
     post = get_object_or_404(BlogPost, id=post_id)
-    
-    # Fetch up to 3 other blog posts, excluding the current one
     related_posts = BlogPost.objects.exclude(id=post_id).order_by('-created_at')[:3]
-    
-    # List of epilepsy facts for placeholder content
     epilepsy_facts = [
         {
             'title': 'Epilepsy Affects Millions',
@@ -176,15 +155,11 @@ def blog_detail(request, post_id):
             'image': 'https://placehold.co/600x400/8655B9/FFFFFF?text=Seizure+Triggers'
         }
     ]
-    
-    # If fewer than 3 related posts, fill with random epilepsy facts
     related_content = list(related_posts)
     if len(related_content) < 3:
         needed = 3 - len(related_content)
-        # Exclude facts already used by title to avoid duplicates
         used_titles = [post.title for post in related_content]
         available_facts = [fact for fact in epilepsy_facts if fact['title'] not in used_titles]
-        # Randomly select needed facts
         selected_facts = random.sample(available_facts, min(needed, len(available_facts)))
         related_content.extend(selected_facts)
     
@@ -194,16 +169,6 @@ def blog_detail(request, post_id):
     }
     return render(request, 'blog_detail.html', context)
 
-
-# # return the latest 3 blog posts for the homepage
-
-# def get_latest_blog_posts():
-#     return BlogPost.objects.all().order_by('-created_at')[:3]
-
-
-
-
-
 def contact(request):
     contact_form = ContactForm()
     newsletter_form = NewsletterForm()
@@ -212,7 +177,6 @@ def contact(request):
             contact_form = ContactForm(request.POST)
             if contact_form.is_valid():
                 contact_submission = contact_form.save()
-                # Send email notification to admin
                 send_mail(
                     subject='New Contact Form Submission',
                     message=f'Name: {contact_submission.name}\nEmail: {contact_submission.email}\nMessage: {contact_submission.message}',
@@ -245,3 +209,26 @@ def export_newsletter_csv(request):
         writer.writerow([subscription.email, subscription.subscribed_at])
     
     return response
+
+def careers(request):
+    job_openings = JobOpening.objects.filter(is_active=True)
+    application_form = JobApplicationForm()
+    if request.method == 'POST' and 'application_submit' in request.POST:
+        application_form = JobApplicationForm(request.POST, request.FILES)
+        if application_form.is_valid():
+            application = application_form.save()
+            send_mail(
+                subject=f'New Job Application for {application.position.title}',
+                message=f'Name: {application.name}\nEmail: {application.email}\nPhone: {application.phone}\nPosition: {application.position.title}\nCover Letter: {application.cover_letter}',
+                from_email='your-gmail-address@gmail.com',
+                recipient_list=['martinlubowa@outlook.com'],
+                fail_silently=False,
+            )
+            messages.success(request, 'Application submitted successfully!')
+            return redirect('careers')
+        else:
+            messages.error(request, 'Please correct the errors in the form.')
+    return render(request, 'careers.html', {
+        'job_openings': job_openings,
+        'application_form': application_form,
+    })

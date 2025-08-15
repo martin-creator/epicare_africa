@@ -108,9 +108,9 @@ EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
-EMAIL_HOST_USER = 'your-gmail-address@gmail.com'  # Replace with your Gmail
-EMAIL_HOST_PASSWORD = 'your-app-specific-password'  # Replace with app-specific password
-DEFAULT_FROM_EMAIL = 'Epicare Africa <your-gmail-address@gmail.com>'
+EMAIL_HOST_USER = 'martinjosephlubowa@gmail.com'  # Replace with your Gmail
+EMAIL_HOST_PASSWORD = 'glbwteburyjvyjks'  # Replace with app-specific password
+DEFAULT_FROM_EMAIL = 'Epicare Africa <martinjosephlubowa@gmail.com>'
 
 SECURE_SSL_REDIRECT = False  # Enable HTTPS in production
 SECURE_HSTS_SECONDS = 3600
@@ -118,3 +118,4 @@ SECURE_HSTS_INCLUDE_SUBDOMAINS = True
 SECURE_HSTS_PRELOAD = True
 CSRF_COOKIE_SECURE = True
 SESSION_COOKIE_SECURE = True
+
