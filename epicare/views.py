@@ -2,17 +2,25 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
 from django.core.mail import send_mail
 from django.core.paginator import Paginator
-from django.http import HttpResponse
 from django.db.models import Q
-import csv
-import uuid
-import requests
 from .models import Product, Category, BlogPost, Order, ContactSubmission, NewsletterSubscription, JobOpening, JobApplication
-from .forms import ContactForm, NewsletterForm, SearchForm, JobApplicationForm
+from .forms import ContactForm, NewsletterForm, SearchForm, JobApplicationForm, OrderForm
+import json
 
 def homepage(request):
     products = Product.objects.all()[:3]
     latest_posts = BlogPost.objects.all().order_by('-created_at')[:3]
+    featured_product = Product.objects.filter(is_featured=True).first()
+    featured_product_data = None
+    if featured_product:
+        featured_product_data = {
+            'id': featured_product.id,
+            'name': featured_product.name,
+            'price': str(featured_product.price),
+            'description': featured_product.description,
+            'image': featured_product.image.url,
+            'stock': featured_product.stock
+        }
     newsletter_form = NewsletterForm()
     if request.method == 'POST':
         newsletter_form = NewsletterForm(request.POST)
@@ -24,6 +32,7 @@ def homepage(request):
         'products': products,
         'newsletter_form': newsletter_form,
         'latest_posts': latest_posts,
+        'featured_product': json.dumps(featured_product_data)
     })
 
 def about(request):
@@ -56,58 +65,54 @@ def shop(request):
         'search_form': search_form,
         'sort_by': sort_by,
         'selected_category': category_id,
+        'search_query': search_form.cleaned_data.get('query', '')
     })
 
 def buy_now(request, product_id):
     product = get_object_or_404(Product, id=product_id)
     if request.method == 'POST':
-        quantity = int(request.POST.get('quantity', 1))
-        email = request.POST.get('email', 'customer@example.com')
-        phone = request.POST.get('phone', '254101108886')
-        if quantity <= product.stock:
-            order = Order.objects.create(
-                product=product,
-                quantity=quantity,
-                email=email,
-                phone=phone,
-            )
-            pesapal_url = "https://demo.pesapal.com/api/PostPesapalDirectOrderV4"
-            params = {
-                'amount': float(product.price * quantity),
-                'description': f"Purchase of {product.name}",
-                'type': 'MERCHANT',
-                'reference': str(uuid.uuid4()),
-                'email': email,
-                'phone_number': phone,
-                'currency': 'KES',
-                'first_name': 'Customer',
-                'last_name': 'Name',
-            }
-            try:
-                response = requests.post(pesapal_url, json=params)
-                if response.status_code == 200:
-                    product.stock -= quantity
-                    product.save()
-                    send_mail(
-                        subject=f'Epicare Africa Order #{order.id} Confirmation',
-                        message=f'Thank you for your order!\n\nProduct: {product.name}\nQuantity: {quantity}\nTotal: KES {product.price * quantity}\nStatus: {order.status}',
-                        from_email='your-gmail-address@gmail.com',
-                        recipient_list=[email],
-                        fail_silently=False,
-                    )
-                    messages.success(request, 'Payment initiated and order confirmed!')
-                    return redirect(response.json().get('redirect_url', 'shop'))
-                else:
-                    order.status = 'Failed'
-                    order.save()
-                    messages.error(request, 'Payment failed. Please try again.')
-            except requests.RequestException:
-                order.status = 'Failed'
-                order.save()
-                messages.error(request, 'Payment gateway error.')
+        form = OrderForm(request.POST)
+        if form.is_valid():
+            quantity = form.cleaned_data['quantity']
+            email = form.cleaned_data.get('email', 'customer@example.com')
+            phone = form.cleaned_data.get('phone', '254101108886')
+            if quantity <= product.stock:
+                order = Order.objects.create(
+                    product=product,
+                    quantity=quantity,
+                    email=email,
+                    phone=phone,
+                    status='Pending'
+                )
+                product.stock -= quantity
+                product.save()
+                # Send email to customer and Epicare Africa
+                email_message = (
+                    f"Thank you for your order from Epicare Africa!\n\n"
+                    f"Order Details:\n"
+                    f"Product: {product.name}\n"
+                    f"Quantity: {quantity}\n"
+                    f"Total Price: KES {product.price * quantity}\n\n"
+                    f"Please make your payment using M-PESA:\n"
+                    f"Paybill Number: 100400\n"
+                    f"Account Name: Epicare\n\n"
+                    f"Once you make your payment, our team will reach out to confirm your order.\n"
+                    f"If you have any questions, contact us at info@epicare.africa or +254 700 123456."
+                )
+                send_mail(
+                    subject=f'Epicare Africa Order #{order.id} Confirmation',
+                    message=email_message,
+                    from_email='your-gmail-address@gmail.com',
+                    recipient_list=[email, 'martinjosephlubowa@gmail.com'],
+                    fail_silently=False,
+                )
+                messages.success(request, 'Order placed successfully! Please check your email for payment instructions.')
+                return redirect('shop')
+            else:
+                messages.error(request, 'Insufficient stock.')
         else:
-            messages.error(request, 'Insufficient stock.')
-    return render(request, 'shop.html', {'products': [product]})
+            messages.error(request, 'Please correct the errors in the form.')
+    return render(request, 'shop.html', {'products': [product], 'order_form': OrderForm()})
 
 def blog(request):
     search_form = SearchForm(request.GET)
@@ -155,6 +160,7 @@ def blog_detail(request, post_id):
             'image': 'https://placehold.co/600x400/8655B9/FFFFFF?text=Seizure+Triggers'
         }
     ]
+    import random
     related_content = list(related_posts)
     if len(related_content) < 3:
         needed = 3 - len(related_content)
@@ -198,6 +204,8 @@ def contact(request):
     })
 
 def export_newsletter_csv(request):
+    from django.http import HttpResponse
+    import csv
     response = HttpResponse(content_type='text/csv')
     response['Content-Disposition'] = 'attachment; filename="newsletter_subscriptions.csv"'
     

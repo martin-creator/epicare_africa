@@ -2,6 +2,7 @@ from django.db import models
 
 class Category(models.Model):
     name = models.CharField(max_length=50)
+    
     def __str__(self):
         return self.name
 
@@ -12,9 +13,16 @@ class Product(models.Model):
     image = models.ImageField(upload_to='products/')
     stock = models.PositiveIntegerField()
     category = models.ForeignKey(Category, on_delete=models.SET_NULL, null=True)
+    is_featured = models.BooleanField(default=False, help_text="Mark this product as featured for the homepage modal")
 
     def __str__(self):
         return self.name
+
+    def save(self, *args, **kwargs):
+        if self.is_featured:
+            # Unset is_featured for all other products
+            Product.objects.filter(is_featured=True).exclude(id=self.id).update(is_featured=False)
+        super().save(*args, **kwargs)
 
 class BlogPost(models.Model):
     title = models.CharField(max_length=200)

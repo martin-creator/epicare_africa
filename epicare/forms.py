@@ -1,5 +1,5 @@
 from django import forms
-from .models import ContactSubmission, NewsletterSubscription, JobOpening, JobApplication
+from .models import ContactSubmission, NewsletterSubscription, JobOpening, JobApplication, Order
 
 class ContactForm(forms.ModelForm):
     class Meta:
@@ -37,3 +37,18 @@ class JobApplicationForm(forms.ModelForm):
             'resume': forms.FileInput(attrs={'class': 'w-full p-2 border rounded', 'required': True, 'accept': '.pdf'}),
             'cover_letter': forms.Textarea(attrs={'class': 'w-full p-2 border rounded', 'rows': 4, 'required': True}),
         }
+
+class OrderForm(forms.ModelForm):
+    class Meta:
+        model = Order
+        fields = ['quantity', 'email', 'phone']
+        widgets = {
+            'quantity': forms.Select(attrs={'class': 'w-full px-3 py-2 border rounded-lg dark:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-primary'}),
+            'email': forms.EmailInput(attrs={'class': 'w-full px-3 py-2 border rounded-lg dark:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-primary', 'placeholder': 'Your email (optional)'}),
+            'phone': forms.TextInput(attrs={'class': 'w-full px-3 py-2 border rounded-lg dark:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-primary', 'placeholder': 'Your phone (optional)'})
+        }
+    def clean_quantity(self):
+        quantity = self.cleaned_data['quantity']
+        if quantity < 1:
+            raise forms.ValidationError("Quantity must be at least 1.")
+        return quantity

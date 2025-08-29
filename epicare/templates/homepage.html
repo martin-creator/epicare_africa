@@ -1,6 +1,6 @@
 {% load static %}
 <!DOCTYPE html>
-<html lang="en" x-data="{ darkMode: localStorage.getItem('darkMode') === 'true', mobileMenuOpen: false, chatOpen: false, quizOpen: false, currentQuestion: 0, score: 0 }" :class="{ 'dark': darkMode }">
+<html lang="en" x-data="{ darkMode: localStorage.getItem('darkMode') === 'true', mobileMenuOpen: false, chatOpen: false, quizOpen: false, currentQuestion: 0, score: 0, featuredModalOpen: false }" :class="{ 'dark': darkMode }">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -69,22 +69,22 @@
     </script>
     
     <!-- Fonts -->
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-<link href="https://fonts.cdnfonts.com/css/calibre" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.cdnfonts.com/css/calibre" rel="stylesheet">
 
-<!-- Font Awesome -->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
-<!-- Alpine JS -->
-<script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <!-- Alpine JS -->
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
 
-<!-- GSAP -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.4/gsap.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.4/ScrollTrigger.min.js"></script>
+    <!-- GSAP -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.4/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.4/ScrollTrigger.min.js"></script>
 
-<!-- Three.js -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.min.js"></script>
+    <!-- Three.js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.min.js"></script>
     
     <style>
         :root {
@@ -195,7 +195,6 @@
             animation: pulseGlow 4s ease-in-out infinite;
         }
         
-        /* Blog Section Styles */
         .blog-card {
             transition: all 0.3s ease;
             perspective: 1000px;
@@ -223,7 +222,6 @@
             z-index: 10;
         }
         
-        /* 3D Map Container */
         #africa-3d-map {
             width: 100%;
             height: 500px;
@@ -340,52 +338,49 @@
     </div>
 
     <!-- Hero Section -->
-   <!-- Hero Section -->
-<section class="hero-gradient text-white overflow-hidden relative min-h-screen">
-    <div class="container mx-auto px-6 py-32 relative z-10">
-        <div class="max-w-2xl lg:max-w-4xl">
-            <h1 class="text-5xl md:text-6xl lg:text-7xl font-bold font-display mb-6 leading-tight">
-                <span class="text-stroke">TRANSFORMING</span><br>
-                <span class="text-white bg-clip-text bg-gradient-to-r from-white to-accent">EPILEPSY CARE</span><br>
-                <span class="text-accent">ACROSS AFRICA</span>
-            </h1>
-            <p class="text-xl md:text-2xl mb-8 opacity-90 max-w-2xl">
-                Cutting-edge solutions powered by technology and compassion for the continent
-            </p>
-            <div class="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4">
-                <a href="{% url 'shop' %}" class="bg-white text-primary px-8 py-4 rounded-lg font-semibold hover:bg-opacity-90 transition transform hover:scale-105 text-center glow-effect">
-                    Explore Solutions <i class="fas fa-arrow-right ml-2"></i>
-                </a>
-                <button @click="quizOpen = true" class="border-2 border-white text-white px-8 py-4 rounded-lg font-semibold hover:bg-white hover:text-primary transition transform hover:scale-105 text-center">
-                    Take Awareness Quiz
-                </button>
+    <section class="hero-gradient text-white overflow-hidden relative min-h-screen">
+        <div class="container mx-auto px-6 py-32 relative z-10">
+            <div class="max-w-2xl lg:max-w-4xl">
+                <h1 class="text-5xl md:text-6xl lg:text-7xl font-bold font-display mb-6 leading-tight">
+                    <span class="text-stroke">TRANSFORMING</span><br>
+                    <span class="text-white bg-clip-text bg-gradient-to-r from-white to-accent">EPILEPSY CARE</span><br>
+                    <span class="text-accent">ACROSS AFRICA</span>
+                </h1>
+                <p class="text-xl md:text-2xl mb-8 opacity-90 max-w-2xl">
+                    Cutting-edge solutions powered by technology and compassion for the continent
+                </p>
+                <div class="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4">
+                    <a href="{% url 'shop' %}" class="bg-white text-primary px-8 py-4 rounded-lg font-semibold hover:bg-opacity-90 transition transform hover:scale-105 text-center glow-effect">
+                        Explore Solutions <i class="fas fa-arrow-right ml-2"></i>
+                    </a>
+                    <button @click="quizOpen = true" class="border-2 border-white text-white px-8 py-4 rounded-lg font-semibold hover:bg-white hover:text-primary transition transform hover:scale-105 text-center">
+                        Take Awareness Quiz
+                    </button>
+                </div>
             </div>
         </div>
-    </div>
-    
-    <!-- Floating Device Mockup -->
-    <div class="absolute right-10 bottom-0 h-3/4 animate-float hidden lg:block">
-        <img src="https://placehold.co/600x600/FFFFFF/6A0DAD?text=EPICARE+DEVICE" alt="Epicare Device" class="h-full object-contain">
-    </div>
-</section>
+        <div class="absolute right-10 bottom-0 h-3/4 animate-float hidden lg:block">
+            <img src="https://placehold.co/600x600/FFFFFF/6A0DAD?text=EPICARE+DEVICE" alt="Epicare Device" class="h-full object-contain">
+        </div>
+    </section>
 
     <!-- Stats Section with Animated Numbers -->
     <section class="bg-white text-white dark:bg-dark py-20 -mt-1">
         <div class="container mx-auto px-6">
             <div class="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
-                <div class="">
+                <div>
                     <div class="text-5xl font-bold mb-2 text-primary" x-data="{ count: 0, target: 50 }" x-intersect.half="gsap.to($data, { duration: 2, target: 50, ease: 'power3.out', onUpdate: () => { count = Math.floor($data.target) } })" x-text="count.toLocaleString()+'M+'"></div>
                     <p class="text-gray-600 dark:text-gray-300">Africans with epilepsy</p>
                 </div>
-                <div class="">
+                <div>
                     <div class="text-5xl font-bold mb-2 text-primary" x-data="{ count: 0, target: 85 }" x-intersect.half="gsap.to($data, { duration: 2, target: 85, ease: 'power3.out', onUpdate: () => { count = Math.floor($data.target) } })" x-text="count+'%'"></div>
                     <p class="text-gray-600 dark:text-gray-300">Treatment gap in Africa</p>
                 </div>
-                <div class="">
+                <div>
                     <div class="text-5xl font-bold mb-2 text-primary" x-data="{ count: 0, target: 250 }" x-intersect.half="gsap.to($data, { duration: 2, target: 250, ease: 'power3.out', onUpdate: () => { count = Math.floor($data.target) } })" x-text="count.toLocaleString()+'K+'"></div>
                     <p class="text-gray-600 dark:text-gray-300">People educated</p>
                 </div>
-                <div class="">
+                <div>
                     <div class="text-5xl font-bold mb-2 text-primary" x-data="{ count: 0, target: 15 }" x-intersect.half="gsap.to($data, { duration: 2, target: 15, ease: 'power3.out', onUpdate: () => { count = Math.floor($data.target) } })" x-text="count+'+'"></div>
                     <p class="text-gray-600 dark:text-gray-300">Countries reached</p>
                 </div>
@@ -408,10 +403,15 @@
             
             <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
                 {% for product in products %}
-                <div class="bg-white dark:bg-gray-800 rounded-xl overflow-hidden shadow-md card-hover  hover:z-10" style="perspective: 1000px;">
+                <div class="bg-white dark:bg-gray-800 rounded-xl overflow-hidden shadow-md card-hover hover:z-10" style="perspective: 1000px;">
                     <div class="relative overflow-hidden h-64 group">
                         <img src="{{ product.image.url }}" alt="{{ product.name }}" loading="lazy" class="w-full h-full object-cover transition duration-500 group-hover:scale-110">
                         <div class="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent"></div>
+                        {% if product.is_featured %}
+                            <div class="absolute top-4 left-4 bg-primary text-white px-3 py-1 rounded-full text-sm font-semibold shadow-lg">
+                                Featured
+                            </div>
+                        {% endif %}
                         <div class="absolute top-4 right-4 bg-accent text-white px-3 py-1 rounded-full text-sm font-semibold shadow-lg">
                             New
                         </div>
@@ -420,12 +420,12 @@
                         <h3 class="text-xl font-semibold mb-2">{{ product.name }}</h3>
                         <p class="text-primary text-lg font-bold mb-4">KES {{ product.price }}</p>
                         <div class="flex space-x-3">
-                            <button @click="$dispatch('open-quick-view', { id: {{ product.id }}, name: '{{ product.name }}', price: '{{ product.price }}', description: '{{ product.description|escapejs }}', image: '{{ product.image.url }}' })" class="bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-white p-2 rounded-full hover:bg-gray-200 dark:hover:bg-gray-600 transition">
+                            <button @click="$dispatch('open-quick-view', { id: {{ product.id }}, name: '{{ product.name|escapejs }}', price: '{{ product.price }}', description: '{{ product.description|escapejs }}', image: '{{ product.image.url }}', stock: {{ product.stock }} })" class="bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-white p-2 rounded-full hover:bg-gray-200 dark:hover:bg-gray-600 transition">
                                 <i class="fas fa-eye"></i>
                             </button>
-                            <a href="" class="bg-primary text-white px-4 py-2 rounded-lg hover:bg-secondary transition flex-1 text-center flex items-center justify-center">
+                            <button @click="$dispatch('open-buy-modal', { id: {{ product.id }}, name: '{{ product.name|escapejs }}', price: '{{ product.price }}', description: '{{ product.description|escapejs }}', image: '{{ product.image.url }}', stock: {{ product.stock }} })" class="bg-primary text-white px-4 py-2 rounded-lg hover:bg-secondary transition flex-1 text-center flex items-center justify-center {% if product.stock == 0 %}opacity-50 cursor-not-allowed{% endif %}" {% if product.stock == 0 %}disabled{% endif %}>
                                 <i class="fas fa-shopping-cart mr-2"></i> Buy Now
-                            </a>
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -434,18 +434,153 @@
         </div>
     </section>
 
-    <!-- Blog Section -->
-<section id="blog-section" class="py-20 bg-white dark:bg-dark">
-    <div class="container mx-auto px-6">
-        <div class="text-center mb-12">
-            <h2 class="text-3xl md:text-4xl font-bold font-display mb-4">Epicare Blog</h2>
-            <p class="text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
-                Latest insights, research, and stories about epilepsy care in Africa
-            </p>
+    <!-- Buy Now Modal -->
+    <div x-data="{ open: false, product: {}, paymentInstructions: false }" 
+         x-show="open" 
+         @open-buy-modal.window="open = true; product = $event.detail; paymentInstructions = false; document.body.style.overflow = 'hidden'" 
+         @click.away="open = false; paymentInstructions = false; document.body.style.overflow = ''" 
+         class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 animate-fade-in">
+        <div class="bg-white dark:bg-gray-800 p-6 md:p-8 rounded-lg w-[90vw] h-[90vh] max-w-7xl overflow-y-auto">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- Left: Image -->
+                <div>
+                    <img :src="product.image" :alt="product.name" class="w-full h-80 object-cover rounded-lg">
+                </div>
+                <!-- Right: Content -->
+                <div class="flex flex-col">
+                    <div class="flex justify-between items-center mb-4">
+                        <h2 class="text-2xl md:text-3xl font-bold font-display" x-text="product.name"></h2>
+                        <button @click="open = false; paymentInstructions = false; document.body.style.overflow = ''" 
+                                class="text-gray-600 dark:text-gray-300 hover:text-primary dark:hover:text-primary">
+                            <i class="fas fa-times text-xl"></i>
+                        </button>
+                    </div>
+                    <p class="text-gray-600 dark:text-gray-300 mb-4" x-text="product.description"></p>
+                    <p class="text-primary text-lg md:text-xl font-bold mb-2" x-text="'KES ' + product.price"></p>
+                    <p :class="product.stock > 0 ? 'text-accent' : 'text-gray-600'" class="mb-4" 
+                       x-text="product.stock > 0 ? 'In Stock: ' + product.stock + ' available' : 'Out of Stock'"></p>
+                    <form method="post" action="{% url 'buy_now' product_id=0 %}" x-bind:action="'{% url 'buy_now' product_id=0 %}'.replace('0', product.id)">
+                        {% csrf_token %}
+                        <input type="hidden" name="product_id" x-bind:value="product.id">
+                        <div class="mb-4">
+                            <label for="quantity" class="block text-sm mb-1 text-gray-600 dark:text-gray-300">Quantity:</label>
+                            <select id="quantity" name="quantity" 
+                                    class="w-full px-3 py-2 border rounded-lg dark:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-primary"
+                                    :disabled="product.stock === 0">
+                                <template x-for="i in Math.min(product.stock || 0, 10)" :key="i">
+                                    <option :value="i" x-text="i"></option>
+                                </template>
+                            </select>
+                        </div>
+                        <div class="mb-4">
+                            <label for="email" class="block text-sm mb-1 text-gray-600 dark:text-gray-300">Email (optional):</label>
+                            <input type="email" id="email" name="email" placeholder="Your email" 
+                                   class="w-full px-3 py-2 border rounded-lg dark:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-primary">
+                        </div>
+                        <div class="mb-4">
+                            <label for="phone" class="block text-sm mb-1 text-gray-600 dark:text-gray-300">Phone (optional):</label>
+                            <input type="tel" id="phone" name="phone" placeholder="Your phone" 
+                                   class="w-full px-3 py-2 border rounded-lg dark:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-primary">
+                        </div>
+                        <button type="submit" 
+                                @click="paymentInstructions = true" 
+                                class="w-full bg-primary text-white px-4 py-2 rounded-lg hover:bg-secondary transition font-semibold" 
+                                :disabled="product.stock === 0">
+                            Confirm Order
+                        </button>
+                    </form>
+                    <div x-show="paymentInstructions" x-transition class="mt-6">
+                        <h3 class="text-lg md:text-xl font-semibold text-gray-800 dark:text-white mb-2">M-PESA Payment Instructions</h3>
+                        <p class="text-gray-600 dark:text-gray-300"><strong>Paybill Number:</strong> 100400</p>
+                        <p class="text-gray-600 dark:text-gray-300"><strong>Account Name:</strong> Epicare</p>
+                        <p class="text-gray-600 dark:text-gray-300 mt-2">Once you make your payment, our team will reach out to confirm your order.</p>
+                    </div>
+                </div>
+            </div>
         </div>
-        
-        <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {% for post in latest_posts %}
+    </div>
+
+    <!-- Featured Product Modal -->
+    <div x-data="{ 
+        open: false, 
+        product: {{ featured_product | safe }}, 
+        paymentInstructions: false 
+    }" 
+    x-show="open && product" 
+    @click.away="open = false; paymentInstructions = false; document.body.style.overflow = ''" 
+    class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 animate-fade-in">
+        <div class="bg-white dark:bg-gray-800 p-6 md:p-8 rounded-lg w-[90vw] h-[90vh] max-w-7xl overflow-y-auto">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- Left: Image -->
+                <div>
+                    <img :src="product.image" :alt="product.name" class="w-full h-80 object-cover rounded-lg">
+                </div>
+                <!-- Right: Content -->
+                <div class="flex flex-col">
+                    <div class="flex justify-between items-center mb-4">
+                        <h2 class="text-2xl md:text-3xl font-bold font-display" x-text="product.name"></h2>
+                        <button @click="open = false; paymentInstructions = false; document.body.style.overflow = ''" 
+                                class="text-gray-600 dark:text-gray-300 hover:text-primary dark:hover:text-primary">
+                            <i class="fas fa-times text-xl"></i>
+                        </button>
+                    </div>
+                    <p class="text-gray-600 dark:text-gray-300 mb-4" x-text="product.description"></p>
+                    <p class="text-primary text-lg md:text-xl font-bold mb-2" x-text="'KES ' + product.price"></p>
+                    <p :class="product.stock > 0 ? 'text-accent' : 'text-gray-600'" class="mb-4" 
+                       x-text="product.stock > 0 ? 'In Stock: ' + product.stock + ' available' : 'Out of Stock'"></p>
+                    <form method="post" action="{% url 'buy_now' product_id=0 %}" x-bind:action="'{% url 'buy_now' product_id=0 %}'.replace('0', product.id)">
+                        {% csrf_token %}
+                        <input type="hidden" name="product_id" x-bind:value="product.id">
+                        <div class="mb-4">
+                            <label for="quantity" class="block text-sm mb-1 text-gray-600 dark:text-gray-300">Quantity:</label>
+                            <select id="quantity" name="quantity" 
+                                    class="w-full px-3 py-2 border rounded-lg dark:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-primary"
+                                    :disabled="product.stock === 0">
+                                <template x-for="i in Math.min(product.stock || 0, 10)" :key="i">
+                                    <option :value="i" x-text="i"></option>
+                                </template>
+                            </select>
+                        </div>
+                        <div class="mb-4">
+                            <label for="email" class="block text-sm mb-1 text-gray-600 dark:text-gray-300">Email (optional):</label>
+                            <input type="email" id="email" name="email" placeholder="Your email" 
+                                   class="w-full px-3 py-2 border rounded-lg dark:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-primary">
+                        </div>
+                        <div class="mb-4">
+                            <label for="phone" class="block text-sm mb-1 text-gray-600 dark:text-gray-300">Phone (optional):</label>
+                            <input type="tel" id="phone" name="phone" placeholder="Your phone" 
+                                   class="w-full px-3 py-2 border rounded-lg dark:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-primary">
+                        </div>
+                        <button type="submit" 
+                                @click="paymentInstructions = true" 
+                                class="w-full bg-primary text-white px-4 py-2 rounded-lg hover:bg-secondary transition font-semibold" 
+                                :disabled="product.stock === 0">
+                            Confirm Order
+                        </button>
+                    </form>
+                    <div x-show="paymentInstructions" x-transition class="mt-6">
+                        <h3 class="text-lg md:text-xl font-semibold text-gray-800 dark:text-white mb-2">M-PESA Payment Instructions</h3>
+                        <p class="text-gray-600 dark:text-gray-300"><strong>Paybill Number:</strong> 100400</p>
+                        <p class="text-gray-600 dark:text-gray-300"><strong>Account Name:</strong> Epicare</p>
+                        <p class="text-gray-600 dark:text-gray-300 mt-2">Once you make your payment, our team will reach out to confirm your order.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Blog Section -->
+    <section id="blog-section" class="py-20 bg-white dark:bg-dark">
+        <div class="container mx-auto px-6">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl md:text-4xl font-bold font-display mb-4">Epicare Blog</h2>
+                <p class="text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
+                    Latest insights, research, and stories about epilepsy care in Africa
+                </p>
+            </div>
+            
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                {% for post in latest_posts %}
                 <article class="blog-card group">
                     <div class="blog-card-inner h-full bg-white dark:bg-gray-800 rounded-xl overflow-hidden shadow-md">
                         <div class="relative h-64 overflow-hidden">
@@ -462,7 +597,7 @@
                             <div class="flex items-center text-sm text-gray-500 dark:text-gray-400 mb-3">
                                 <span>{{ post.created_at|date:"F d, Y" }}</span>
                                 <span class="mx-2">•</span>
-                                <span>5 min read</span> <!-- Adjust this if you have a field for reading time -->
+                                <span>5 min read</span>
                             </div>
                             <h3 class="text-xl font-semibold mb-3">{{ post.title }}</h3>
                             <p class="text-gray-600 dark:text-gray-300 mb-4">{{ post.content|truncatewords:30 }}</p>
@@ -472,18 +607,18 @@
                         </div>
                     </div>
                 </article>
-            {% empty %}
-                <p class="text-center text-gray-600 dark:text-gray-300 col-span-full">No blog posts available.</p>
-            {% endfor %}
+                {% empty %}
+                    <p class="text-center text-gray-600 dark:text-gray-300 col-span-full">No blog posts available.</p>
+                {% endfor %}
+            </div>
+            
+            <div class="text-center mt-12">
+                <a href="{% url 'blog' %}" class="inline-flex items-center text-primary font-semibold hover:underline text-lg">
+                    View All Blog Posts <i class="fas fa-arrow-right ml-2"></i>
+                </a>
+            </div>
         </div>
-        
-        <div class="text-center mt-12">
-            <a href="{% url 'blog' %}" class="inline-flex items-center text-primary font-semibold hover:underline text-lg">
-                View All Blog Posts <i class="fas fa-arrow-right ml-2"></i>
-            </a>
-        </div>
-    </div>
-</section>
+    </section>
 
     <!-- Interactive Africa Map Section -->
     <section class="py-20 bg-gray-50 dark:bg-gray-900">
@@ -494,11 +629,7 @@
                     We're transforming epilepsy care in countries throughout the continent
                 </p>
             </div>
-            
-            <!-- 3D Africa Map -->
             <div id="africa-3d-map" class="mb-12"></div>
-            
-            
             <div class="mt-12 text-center">
                 <a href="{% url 'about' %}" class="inline-flex items-center text-primary font-semibold hover:underline text-lg">
                     See our full impact across Africa <i class="fas fa-arrow-right ml-2"></i>
@@ -511,7 +642,7 @@
     <section class="py-20 bg-white dark:bg-dark">
         <div class="container mx-auto px-6">
             <div class="flex flex-col md:flex-row items-center gap-12">
-                <div class="">
+                <div>
                     <div class="flex items-center mb-4">
                         <div class="w-8 h-1 bg-primary mr-3"></div>
                         <span class="text-sm font-semibold text-primary uppercase tracking-wider">Educational Series</span>
@@ -574,482 +705,480 @@
                         <form class="flex flex-col sm:flex-row gap-4">
                             <input type="email" placeholder="Your email address" class="flex-grow px-6 py-4 rounded-lg border border-gray-300 dark:border-gray-700 focus:outline-none focus:ring-2 focus:ring-primary dark:bg-gray-700">
                             <button type="submit" class="bg-primary text-white px-8 py-4 rounded-lg hover:bg-secondary transition font-semibold whitespace-nowrap">
-                                <i class="fas fa-envelope mr-2"></i>
-                            Subscribe
-                        </button>
-                    </form>
-                    <p class="text-sm text-gray-500 dark:text-gray-400 mt-4">
-                        We respect your privacy. Unsubscribe at any time.
+                                <i class="fas fa-envelope mr-2"></i> Subscribe
+                            </button>
+                        </form>
+                        <p class="text-sm text-gray-500 dark:text-gray-400 mt-4">
+                            We respect your privacy. Unsubscribe at any time.
+                        </p>
+                    </div>
+                    <div class="md:w-1/2 bg-gray-100 dark:bg-gray-700 flex items-center justify-center p-12">
+                        <img src="https://placehold.co/500x300/6A0DAD/FFFFFF?text=EPICARE+NEWSLETTER" alt="Newsletter" class="rounded-lg shadow-md w-full h-auto">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-gray-900 text-white pt-20 pb-10">
+        <div class="container mx-auto px-6">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-12">
+                <div>
+                    <a href="{% url 'homepage' %}" class="text-3xl font-bold font-display flex items-center group mb-6">
+                        <span class="text-primary group-hover:text-secondary transition">EPI</span>
+                        <span class="text-white group-hover:text-primary transition">CARE</span>
+                        <span class="ml-2 text-xs bg-accent text-white px-2 py-1 rounded-full">Africa</span>
+                    </a>
+                    <p class="text-gray-400 mb-6">
+                        Transforming epilepsy care across Africa through innovative technology and community education.
                     </p>
+                    <div class="flex space-x-4">
+                        <a href="#" class="text-gray-400 hover:text-white transition">
+                            <i class="fab fa-facebook-f"></i>
+                        </a>
+                        <a href="#" class="text-gray-400 hover:text-white transition">
+                            <i class="fab fa-twitter"></i>
+                        </a>
+                        <a href="#" class="text-gray-400 hover:text-white transition">
+                            <i class="fab fa-instagram"></i>
+                        </a>
+                        <a href="#" class="text-gray-400 hover:text-white transition">
+                            <i class="fab fa-linkedin-in"></i>
+                        </a>
+                        <a href="#" class="text-gray-400 hover:text-white transition">
+                            <i class="fab fa-youtube"></i>
+                        </a>
+                    </div>
                 </div>
-                <div class="md:w-1/2 bg-gray-100 dark:bg-gray-700 flex items-center justify-center p-12">
-                    <img src="https://placehold.co/500x300/6A0DAD/FFFFFF?text=EPICARE+NEWSLETTER" alt="Newsletter" class="rounded-lg shadow-md w-full h-auto">
+                
+                <div>
+                    <h3 class="text-lg font-semibold mb-6">Quick Links</h3>
+                    <ul class="space-y-3">
+                        <li><a href="{% url 'homepage' %}" class="text-gray-400 hover:text-white transition">Home</a></li>
+                        <li><a href="{% url 'about' %}" class="text-gray-400 hover:text-white transition">About Us</a></li>
+                        <li><a href="{% url 'shop' %}" class="text-gray-400 hover:text-white transition">Our Products</a></li>
+                        <li><a href="{% url 'blog' %}" class="text-gray-400 hover:text-white transition">Blog</a></li>
+                        <li><a href="{% url 'careers' %}" class="text-gray-400 hover:text-white transition">Careers</a></li>
+                        <li><a href="{% url 'contact' %}" class="text-gray-400 hover:text-white transition">Contact</a></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h3 class="text-lg font-semibold mb-6">Products</h3>
+                    <ul class="space-y-3">
+                        <li><a href="#" class="text-gray-400 hover:text-white transition">Seizure Detection Device</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition">Medication Reminder App</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition">Educational Materials</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition">Healthcare Provider Tools</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition">All Products</a></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h3 class="text-lg font-semibold mb-6">Contact Us</h3>
+                    <ul class="space-y-3">
+                        <li class="flex items-start">
+                            <i class="fas fa-map-marker-alt text-primary mt-1 mr-3"></i>
+                            <span class="text-gray-400">Nairobi, Kenya | Kampala, Uganda | Lagos, Nigeria</span>
+                        </li>
+                        <li class="flex items-center">
+                            <i class="fas fa-phone-alt text-primary mr-3"></i>
+                            <span class="text-gray-400">+254 700 123456</span>
+                        </li>
+                        <li class="flex items-center">
+                            <i class="fas fa-envelope text-primary mr-3"></i>
+                            <span class="text-gray-400">info@epicare.africa</span>
+                        </li>
+                    </ul>
                 </div>
             </div>
-        </div>
-    </div>
-</section>
-
-<!-- Footer -->
-<footer class="bg-gray-900 text-white pt-20 pb-10">
-    <div class="container mx-auto px-6">
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-12">
-            <div>
-                <a href="{% url 'homepage' %}" class="text-3xl font-bold font-display flex items-center group mb-6">
-                    <span class="text-primary group-hover:text-secondary transition">EPI</span>
-                    <span class="text-white group-hover:text-primary transition">CARE</span>
-                    <span class="ml-2 text-xs bg-accent text-white px-2 py-1 rounded-full">Africa</span>
-                </a>
-                <p class="text-gray-400 mb-6">
-                    Transforming epilepsy care across Africa through innovative technology and community education.
+            
+            <div class="border-t border-gray-800 pt-8 flex flex-col md:flex-row justify-between items-center">
+                <p class="text-gray-500 text-sm mb-4 md:mb-0">
+                    &copy; 2025 Epicare Africa. All rights reserved.
                 </p>
-                <div class="flex space-x-4">
-                    <a href="#" class="text-gray-400 hover:text-white transition">
-                        <i class="fab fa-facebook-f"></i>
-                    </a>
-                    <a href="#" class="text-gray-400 hover:text-white transition">
-                        <i class="fab fa-twitter"></i>
-                    </a>
-                    <a href="#" class="text-gray-400 hover:text-white transition">
-                        <i class="fab fa-instagram"></i>
-                    </a>
-                    <a href="#" class="text-gray-400 hover:text-white transition">
-                        <i class="fab fa-linkedin-in"></i>
-                    </a>
-                    <a href="#" class="text-gray-400 hover:text-white transition">
-                        <i class="fab fa-youtube"></i>
-                    </a>
+                <div class="flex space-x-6">
+                    <a href="#" class="text-gray-500 hover:text-white text-sm transition">Privacy Policy</a>
+                    <a href="#" class="text-gray-500 hover:text-white text-sm transition">Terms of Service</a>
+                    <a href="#" class="text-gray-500 hover:text-white text-sm transition">Cookie Policy</a>
                 </div>
             </div>
-            
-            <div>
-                <h3 class="text-lg font-semibold mb-6">Quick Links</h3>
-                <ul class="space-y-3">
-                    <li><a href="{% url 'homepage' %}" class="text-gray-400 hover:text-white transition">Home</a></li>
-                    <li><a href="{% url 'about' %}" class="text-gray-400 hover:text-white transition">About Us</a></li>
-                    <li><a href="{% url 'shop' %}" class="text-gray-400 hover:text-white transition">Our Products</a></li>
-                    <li><a href="{% url 'blog' %}" class="text-gray-400 hover:text-white transition">Blog</a></li>
-                    <li><a href="{% url 'careers' %}" class="text-gray-400 hover:text-white transition">Careers</a></li>                    
-                    <li><a href="{% url 'contact' %}" class="text-gray-400 hover:text-white transition">Contact</a></li>
-                </ul>
-            </div>
-            
-            <div>
-                <h3 class="text-lg font-semibold mb-6">Products</h3>
-                <ul class="space-y-3">
-                    <li><a href="#" class="text-gray-400 hover:text-white transition">Seizure Detection Device</a></li>
-                    <li><a href="#" class="text-gray-400 hover:text-white transition">Medication Reminder App</a></li>
-                    <li><a href="#" class="text-gray-400 hover:text-white transition">Educational Materials</a></li>
-                    <li><a href="#" class="text-gray-400 hover:text-white transition">Healthcare Provider Tools</a></li>
-                    <li><a href="#" class="text-gray-400 hover:text-white transition">All Products</a></li>
-                </ul>
-            </div>
-            
-            <div>
-                <h3 class="text-lg font-semibold mb-6">Contact Us</h3>
-                <ul class="space-y-3">
-                    <li class="flex items-start">
-                        <i class="fas fa-map-marker-alt text-primary mt-1 mr-3"></i>
-                        <span class="text-gray-400">Nairobi, Kenya | Kampala, Uganda | Lagos, Nigeria</span>
-                    </li>
-                    <li class="flex items-center">
-                        <i class="fas fa-phone-alt text-primary mr-3"></i>
-                        <span class="text-gray-400">+254 700 123456</span>
-                    </li>
-                    <li class="flex items-center">
-                        <i class="fas fa-envelope text-primary mr-3"></i>
-                        <span class="text-gray-400">info@epicare.africa</span>
-                    </li>
-                </ul>
-            </div>
         </div>
-        
-        <div class="border-t border-gray-800 pt-8 flex flex-col md:flex-row justify-between items-center">
-            <p class="text-gray-500 text-sm mb-4 md:mb-0">
-                &copy; 2025 Epicare Africa. All rights reserved.
-            </p>
-            <div class="flex space-x-6">
-                <a href="#" class="text-gray-500 hover:text-white text-sm transition">Privacy Policy</a>
-                <a href="#" class="text-gray-500 hover:text-white text-sm transition">Terms of Service</a>
-                <a href="#" class="text-gray-500 hover:text-white text-sm transition">Cookie Policy</a>
-            </div>
-        </div>
-    </div>
-</footer>
+    </footer>
 
-<!-- Quiz Modal -->
-<div x-show="quizOpen" x-transition class="fixed inset-0 z-50 overflow-y-auto" style="background-color: rgba(0,0,0,0.5); backdrop-filter: blur(5px);">
-    <div class="flex items-center justify-center min-h-screen p-4">
-        <div @click.away="quizOpen = false" class="bg-white dark:bg-gray-800 rounded-2xl shadow-xl overflow-hidden w-full max-w-2xl">
-            <div class="p-6">
-                <div class="flex justify-between items-center mb-6">
-                    <h3 class="text-2xl font-bold font-display">Epilepsy Awareness Quiz</h3>
-                    <button @click="quizOpen = false" class="text-gray-500 hover:text-gray-700 dark:hover:text-gray-300">
-                        <i class="fas fa-times"></i>
-                    </button>
-                </div>
-                
-                <!-- Quiz Content -->
-                <div x-show="currentQuestion === 0">
-                    <div class="text-center py-8">
-                        <div class="w-24 h-24 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-6">
-                            <i class="fas fa-brain text-primary text-4xl"></i>
-                        </div>
-                        <h4 class="text-xl font-semibold mb-4">Test Your Epilepsy Knowledge</h4>
-                        <p class="text-gray-600 dark:text-gray-300 mb-6">
-                            This 5-question quiz will help you understand important facts about epilepsy and how to support those affected.
-                        </p>
-                        <button @click="currentQuestion = 1" class="bg-primary text-white px-8 py-3 rounded-lg hover:bg-secondary transition font-semibold">
-                            Start Quiz
-                        </button>
-                    </div>
-                </div>
-                
-                <!-- Question 1 -->
-                <div x-show="currentQuestion === 1" x-transition>
-                    <div class="mb-6">
-                        <div class="flex items-center justify-between mb-2">
-                            <span class="text-sm font-medium text-primary">Question 1 of 5</span>
-                            <span class="text-sm font-medium text-gray-500 dark:text-gray-400">Epilepsy Basics</span>
-                        </div>
-                        <div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
-                            <div class="bg-primary h-2 rounded-full" style="width: 20%"></div>
-                        </div>
-                    </div>
-                    
-                    <h4 class="text-xl font-semibold mb-6">What is epilepsy?</h4>
-                    
-                    <div class="space-y-3">
-                        <button @click="currentQuestion = 2" class="w-full text-left p-4 border border-gray-200 dark:border-gray-700 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition">
-                            A. A mental illness
-                        </button>
-                        <button @click="currentQuestion = 2; score += 1" class="w-full text-left p-4 border border-gray-200 dark:border-gray-700 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition">
-                            B. A neurological disorder characterized by recurrent seizures
-                        </button>
-                        <button @click="currentQuestion = 2" class="w-full text-left p-4 border border-gray-200 dark:border-gray-700 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition">
-                            C. A contagious disease
-                        </button>
-                        <button @click="currentQuestion = 2" class="w-full text-left p-4 border border-gray-200 dark:border-gray-700 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition">
-                            D. A type of headache disorder
-                        </button>
-                    </div>
-                </div>
-                
-                <!-- Question 2 -->
-                <div x-show="currentQuestion === 2" x-transition>
-                    <div class="mb-6">
-                        <div class="flex items-center justify-between mb-2">
-                            <span class="text-sm font-medium text-primary">Question 2 of 5</span>
-                            <span class="text-sm font-medium text-gray-500 dark:text-gray-400">First Aid</span>
-                        </div>
-                        <div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
-                            <div class="bg-primary h-2 rounded-full" style="width: 40%"></div>
-                        </div>
-                    </div>
-                    
-                    <h4 class="text-xl font-semibold mb-6">What should you do if someone is having a seizure?</h4>
-                    
-                    <div class="space-y-3">
-                        <button @click="currentQuestion = 3" class="w-full text-left p-4 border border-gray-200 dark:border-gray-700 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition">
-                            A. Hold them down to stop the shaking
-                        </button>
-                        <button @click="currentQuestion = 3" class="w-full text-left p-4 border border-gray-200 dark:border-gray-700 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition">
-                            B. Put something in their mouth to prevent tongue biting
-                        </button>
-                        <button @click="currentQuestion = 3; score += 1" class="w-full text-left p-4 border border-gray-200 dark:border-gray-700 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition">
-                            C. Clear the area around them, cushion their head, and time the seizure
-                        </button>
-                        <button @click="currentQuestion = 3" class="w-full text-left p-4 border border-gray-200 dark:border-gray-700 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition">
-                            D. Pour water on their face to shock them out of it
-                        </button>
-                    </div>
-                </div>
-                
-                <!-- Question 3 -->
-                <div x-show="currentQuestion === 3" x-transition>
-                    <div class="mb-6">
-                        <div class="flex items-center justify-between mb-2">
-                            <span class="text-sm font-medium text-primary">Question 3 of 5</span>
-                            <span class="text-sm font-medium text-gray-500 dark:text-gray-400">Treatment</span>
-                        </div>
-                        <div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
-                            <div class="bg-primary h-2 rounded-full" style="width: 60%"></div>
-                        </div>
-                    </div>
-                    
-                    <h4 class="text-xl font-semibold mb-6">Which of these is NOT true about epilepsy treatment?</h4>
-                    
-                    <div class="space-y-3">
-                        <button @click="currentQuestion = 4" class="w-full text-left p-4 border border-gray-200 dark:border-gray-700 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition">
-                            A. Most people with epilepsy can control seizures with medication
-                        </button>
-                        <button @click="currentQuestion = 4" class="w-full text-left p-4 border border-gray-200 dark:border-gray-700 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition">
-                            B. Surgery may be an option for some people
-                        </button>
-                        <button @click="currentQuestion = 4" class="w-full text-left p-4 border border-gray-200 dark:border-gray-700 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition">
-                            C. Dietary therapies can help certain types of epilepsy
-                        </button>
-                        <button @click="currentQuestion = 4; score += 1" class="w-full text-left p-4 border border-gray-200 dark:border-gray-700 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition">
-                            D. Epilepsy can always be cured with proper treatment
-                        </button>
-                    </div>
-                </div>
-                
-                <!-- Question 4 -->
-                <div x-show="currentQuestion === 4" x-transition>
-                    <div class="mb-6">
-                        <div class="flex items-center justify-between mb-2">
-                            <span class="text-sm font-medium text-primary">Question 4 of 5</span>
-                            <span class="text-sm font-medium text-gray-500 dark:text-gray-400">Myths</span>
-                        </div>
-                        <div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
-                            <div class="bg-primary h-2 rounded-full" style="width: 80%"></div>
-                        </div>
-                    </div>
-                    
-                    <h4 class="text-xl font-semibold mb-6">Which statement about epilepsy is a MYTH?</h4>
-                    
-                    <div class="space-y-3">
-                        <button @click="currentQuestion = 5; score += 1" class="w-full text-left p-4 border border-gray-200 dark:border-gray-700 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition">
-                            A. Epilepsy is caused by evil spirits or witchcraft
-                        </button>
-                        <button @click="currentQuestion = 5" class="w-full text-left p-4 border border-gray-200 dark:border-gray-700 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition">
-                            B. Epilepsy is a neurological condition
-                        </button>
-                        <button @click="currentQuestion = 5" class="w-full text-left p-4 border border-gray-200 dark:border-gray-700 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition">
-                            C. People with epilepsy can live normal lives
-                        </button>
-                        <button @click="currentQuestion = 5" class="w-full text-left p-4 border border-gray-200 dark:border-gray-700 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition">
-                            D. Not all seizures involve convulsions
-                        </button>
-                    </div>
-                </div>
-                
-                <!-- Question 5 -->
-                <div x-show="currentQuestion === 5" x-transition>
-                    <div class="mb-6">
-                        <div class="flex items-center justify-between mb-2">
-                            <span class="text-sm font-medium text-primary">Question 5 of 5</span>
-                            <span class="text-sm font-medium text-gray-500 dark:text-gray-400">Africa Context</span>
-                        </div>
-                        <div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
-                            <div class="bg-primary h-2 rounded-full" style="width: 100%"></div>
-                        </div>
-                    </div>
-                    
-                    <h4 class="text-xl font-semibold mb-6">What is the epilepsy treatment gap in Africa?</h4>
-                    
-                    <div class="space-y-3">
-                        <button @click="currentQuestion = 6" class="w-full text-left p-4 border border-gray-200 dark:border-gray-700 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition">
-                            A. Less than 10% of people don't receive treatment
-                        </button>
-                        <button @click="currentQuestion = 6" class="w-full text-left p-4 border border-gray-200 dark:border-gray-700 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition">
-                            B. About 30% of people don't receive treatment
-                        </button>
-                        <button @click="currentQuestion = 6; score += 1" class="w-full text-left p-4 border border-gray-200 dark:border-gray-700 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition">
-                            C. Over 75% of people don't receive proper treatment
-                        </button>
-                        <button @click="currentQuestion = 6" class="w-full text-left p-4 border border-gray-200 dark:border-gray-700 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition">
-                            D. There is no treatment gap in Africa
-                        </button>
-                    </div>
-                </div>
-                
-                <!-- Results -->
-                <div x-show="currentQuestion === 6" x-transition>
-                    <div class="text-center py-8">
-                        <div class="w-24 h-24 rounded-full flex items-center justify-center mx-auto mb-6" 
-                             :class="score >= 3 ? 'bg-green-100 text-green-600' : 'bg-yellow-100 text-yellow-600'">
-                            <i :class="score >= 3 ? 'fas fa-check-circle text-4xl' : 'fas fa-exclamation-circle text-4xl'"></i>
-                        </div>
-                        <h4 class="text-xl font-semibold mb-4" x-text="score >= 3 ? 'Great Job!' : 'Good Try!'"></h4>
-                        <p class="text-gray-600 dark:text-gray-300 mb-6">
-                            You scored <span class="font-bold" x-text="score + ' out of 5'"></span>.
-                            <span x-show="score >= 4">You have excellent knowledge about epilepsy!</span>
-                            <span x-show="score == 3">You have good basic knowledge about epilepsy.</span>
-                            <span x-show="score < 3">Consider learning more about epilepsy to help support those affected.</span>
-                        </p>
-                        <div class="space-y-4">
-                            <button @click="currentQuestion = 0; score = 0" class="bg-primary text-white px-8 py-3 rounded-lg hover:bg-secondary transition font-semibold">
-                                Take Quiz Again
-                            </button>
-                            <button @click="quizOpen = false; currentQuestion = 0; score = 0" class="border border-primary text-primary dark:text-white px-8 py-3 rounded-lg hover:bg-primary/10 transition font-semibold">
-                                Close
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-
-<!-- Quick View Modal -->
-<div x-data="{ 
-    open: true, 
-    product: { id: null, name: '', price: '', description: '', image: '' }
-}" 
-x-show="open" 
-@open-quick-view.window="
-    open = true;
-    product.id = $event.detail.id;
-    product.name = $event.detail.name;
-    product.price = $event.detail.price;
-    product.description = $event.detail.description;
-    product.image = $event.detail.image;
-"
-x-transition class="fixed inset-0 z-50 overflow-y-auto" style="background-color: rgba(0,0,0,0.5); backdrop-filter: blur(5px);">
-    <div class="flex items-center justify-center min-h-screen p-4">
-        <div @click.away="open = false" class="bg-white dark:bg-gray-800 rounded-2xl shadow-xl overflow-hidden w-full max-w-4xl">
-            <div class="grid md:grid-cols-2">
-                <div class="p-6 md:p-8">
-                    <div class="relative h-64 md:h-80 mb-6 rounded-xl overflow-hidden">
-                        <img x-bind:src="product.image" x-bind:alt="product.name" class="w-full h-full object-cover">
-                    </div>
-                </div>
-                <div class="p-6 md:p-8">
-                    <div class="flex justify-between items-start mb-4">
-                        <div>
-                            <h3 x-text="product.name" class="text-2xl font-bold font-display"></h3>
-                            <p x-text="'KES ' + product.price" class="text-primary text-xl font-bold mt-2"></p>
-                        </div>
-                        <button @click="open = false" class="text-gray-500 hover:text-gray-700 dark:hover:text-gray-300">
+    <!-- Quiz Modal -->
+    <div x-show="quizOpen" x-transition class="fixed inset-0 z-50 overflow-y-auto" style="background-color: rgba(0,0,0,0.5); backdrop-filter: blur(5px);">
+        <div class="flex items-center justify-center min-h-screen p-4">
+            <div @click.away="quizOpen = false" class="bg-white dark:bg-gray-800 rounded-2xl shadow-xl overflow-hidden w-full max-w-2xl">
+                <div class="p-6">
+                    <div class="flex justify-between items-center mb-6">
+                        <h3 class="text-2xl font-bold font-display">Epilepsy Awareness Quiz</h3>
+                        <button @click="quizOpen = false" class="text-gray-500 hover:text-gray-700 dark:hover:text-gray-300">
                             <i class="fas fa-times"></i>
                         </button>
                     </div>
                     
-                    <div class="prose dark:prose-invert max-w-none mb-6" x-html="product.description"></div>
+                    <!-- Quiz Content -->
+                    <div x-show="currentQuestion === 0">
+                        <div class="text-center py-8">
+                            <div class="w-24 h-24 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-6">
+                                <i class="fas fa-brain text-primary text-4xl"></i>
+                            </div>
+                            <h4 class="text-xl font-semibold mb-4">Test Your Epilepsy Knowledge</h4>
+                            <p class="text-gray-600 dark:text-gray-300 mb-6">
+                                This 5-question quiz will help you understand important facts about epilepsy and how to support those affected.
+                            </p>
+                            <button @click="currentQuestion = 1" class="bg-primary text-white px-8 py-3 rounded-lg hover:bg-secondary transition font-semibold">
+                                Start Quiz
+                            </button>
+                        </div>
+                    </div>
                     
-                    <div class="flex space-x-4">
-                        <a x-bind:href="'' + product.id" class="bg-primary text-white px-6 py-3 rounded-lg hover:bg-secondary transition font-semibold flex-1 text-center">
-                            <i class="fas fa-shopping-cart mr-2"></i> Buy Now
-                        </a>
+                    <!-- Question 1 -->
+                    <div x-show="currentQuestion === 1" x-transition>
+                        <div class="mb-6">
+                            <div class="flex items-center justify-between mb-2">
+                                <span class="text-sm font-medium text-primary">Question 1 of 5</span>
+                                <span class="text-sm font-medium text-gray-500 dark:text-gray-400">Epilepsy Basics</span>
+                            </div>
+                            <div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
+                                <div class="bg-primary h-2 rounded-full" style="width: 20%"></div>
+                            </div>
+                        </div>
+                        
+                        <h4 class="text-xl font-semibold mb-6">What is epilepsy?</h4>
+                        
+                        <div class="space-y-3">
+                            <button @click="currentQuestion = 2" class="w-full text-left p-4 border border-gray-200 dark:border-gray-700 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition">
+                                A. A mental illness
+                            </button>
+                            <button @click="currentQuestion = 2; score += 1" class="w-full text-left p-4 border border-gray-200 dark:border-gray-700 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition">
+                                B. A neurological disorder characterized by recurrent seizures
+                            </button>
+                            <button @click="currentQuestion = 2" class="w-full text-left p-4 border border-gray-200 dark:border-gray-700 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition">
+                                C. A contagious disease
+                            </button>
+                            <button @click="currentQuestion = 2" class="w-full text-left p-4 border border-gray-200 dark:border-gray-700 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition">
+                                D. A type of headache disorder
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <!-- Question 2 -->
+                    <div x-show="currentQuestion === 2" x-transition>
+                        <div class="mb-6">
+                            <div class="flex items-center justify-between mb-2">
+                                <span class="text-sm font-medium text-primary">Question 2 of 5</span>
+                                <span class="text-sm font-medium text-gray-500 dark:text-gray-400">First Aid</span>
+                            </div>
+                            <div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
+                                <div class="bg-primary h-2 rounded-full" style="width: 40%"></div>
+                            </div>
+                        </div>
+                        
+                        <h4 class="text-xl font-semibold mb-6">What should you do if someone is having a seizure?</h4>
+                        
+                        <div class="space-y-3">
+                            <button @click="currentQuestion = 3" class="w-full text-left p-4 border border-gray-200 dark:border-gray-700 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition">
+                                A. Hold them down to stop the shaking
+                            </button>
+                            <button @click="currentQuestion = 3" class="w-full text-left p-4 border border-gray-200 dark:border-gray-700 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition">
+                                B. Put something in their mouth to prevent tongue biting
+                            </button>
+                            <button @click="currentQuestion = 3; score += 1" class="w-full text-left p-4 border border-gray-200 dark:border-gray-700 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition">
+                                C. Clear the area around them, cushion their head, and time the seizure
+                            </button>
+                            <button @click="currentQuestion = 3" class="w-full text-left p-4 border border-gray-200 dark:border-gray-700 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition">
+                                D. Pour water on their face to shock them out of it
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <!-- Question 3 -->
+                    <div x-show="currentQuestion === 3" x-transition>
+                        <div class="mb-6">
+                            <div class="flex items-center justify-between mb-2">
+                                <span class="text-sm font-medium text-primary">Question 3 of 5</span>
+                                <span class="text-sm font-medium text-gray-500 dark:text-gray-400">Treatment</span>
+                            </div>
+                            <div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
+                                <div class="bg-primary h-2 rounded-full" style="width: 60%"></div>
+                            </div>
+                        </div>
+                        
+                        <h4 class="text-xl font-semibold mb-6">Which of these is NOT true about epilepsy treatment?</h4>
+                        
+                        <div class="space-y-3">
+                            <button @click="currentQuestion = 4" class="w-full text-left p-4 border border-gray-200 dark:border-gray-700 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition">
+                                A. Most people with epilepsy can control seizures with medication
+                            </button>
+                            <button @click="currentQuestion = 4" class="w-full text-left p-4 border border-gray-200 dark:border-gray-700 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition">
+                                B. Surgery may be an option for some people
+                            </button>
+                            <button @click="currentQuestion = 4" class="w-full text-left p-4 border border-gray-200 dark:border-gray-700 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition">
+                                C. Dietary therapies can help certain types of epilepsy
+                            </button>
+                            <button @click="currentQuestion = 4; score += 1" class="w-full text-left p-4 border border-gray-200 dark:border-gray-700 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition">
+                                D. Epilepsy can always be cured with proper treatment
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <!-- Question 4 -->
+                    <div x-show="currentQuestion === 4" x-transition>
+                        <div class="mb-6">
+                            <div class="flex items-center justify-between mb-2">
+                                <span class="text-sm font-medium text-primary">Question 4 of 5</span>
+                                <span class="text-sm font-medium text-gray-500 dark:text-gray-400">Myths</span>
+                            </div>
+                            <div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
+                                <div class="bg-primary h-2 rounded-full" style="width: 80%"></div>
+                            </div>
+                        </div>
+                        
+                        <h4 class="text-xl font-semibold mb-6">Which statement about epilepsy is a MYTH?</h4>
+                        
+                        <div class="space-y-3">
+                            <button @click="currentQuestion = 5; score += 1" class="w-full text-left p-4 border border-gray-200 dark:border-gray-700 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition">
+                                A. Epilepsy is caused by evil spirits or witchcraft
+                            </button>
+                            <button @click="currentQuestion = 5" class="w-full text-left p-4 border border-gray-200 dark:border-gray-700 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition">
+                                B. Epilepsy is a neurological condition
+                            </button>
+                            <button @click="currentQuestion = 5" class="w-full text-left p-4 border border-gray-200 dark:border-gray-700 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition">
+                                C. People with epilepsy can live normal lives
+                            </button>
+                            <button @click="currentQuestion = 5" class="w-full text-left p-4 border border-gray-200 dark:border-gray-700 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition">
+                                D. Not all seizures involve convulsions
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <!-- Question 5 -->
+                    <div x-show="currentQuestion === 5" x-transition>
+                        <div class="mb-6">
+                            <div class="flex items-center justify-between mb-2">
+                                <span class="text-sm font-medium text-primary">Question 5 of 5</span>
+                                <span class="text-sm font-medium text-gray-500 dark:text-gray-400">Africa Context</span>
+                            </div>
+                            <div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
+                                <div class="bg-primary h-2 rounded-full" style="width: 100%"></div>
+                            </div>
+                        </div>
+                        
+                        <h4 class="text-xl font-semibold mb-6">What is the epilepsy treatment gap in Africa?</h4>
+                        
+                        <div class="space-y-3">
+                            <button @click="currentQuestion = 6" class="w-full text-left p-4 border border-gray-200 dark:border-gray-700 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition">
+                                A. Less than 10% of people don't receive treatment
+                            </button>
+                            <button @click="currentQuestion = 6" class="w-full text-left p-4 border border-gray-200 dark:border-gray-700 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition">
+                                B. About 30% of people don't receive treatment
+                            </button>
+                            <button @click="currentQuestion = 6; score += 1" class="w-full text-left p-4 border border-gray-200 dark:border-gray-700 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition">
+                                C. Over 75% of people don't receive proper treatment
+                            </button>
+                            <button @click="currentQuestion = 6" class="w-full text-left p-4 border border-gray-200 dark:border-gray-700 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition">
+                                D. There is no treatment gap in Africa
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <!-- Results -->
+                    <div x-show="currentQuestion === 6" x-transition>
+                        <div class="text-center py-8">
+                            <div class="w-24 h-24 rounded-full flex items-center justify-center mx-auto mb-6" 
+                                 :class="score >= 3 ? 'bg-green-100 text-green-600' : 'bg-yellow-100 text-yellow-600'">
+                                <i :class="score >= 3 ? 'fas fa-check-circle text-4xl' : 'fas fa-exclamation-circle text-4xl'"></i>
+                            </div>
+                            <h4 class="text-xl font-semibold mb-4" x-text="score >= 3 ? 'Great Job!' : 'Good Try!'"></h4>
+                            <p class="text-gray-600 dark:text-gray-300 mb-6">
+                                You scored <span class="font-bold" x-text="score + ' out of 5'"></span>.
+                                <span x-show="score >= 4">You have excellent knowledge about epilepsy!</span>
+                                <span x-show="score == 3">You have good basic knowledge about epilepsy.</span>
+                                <span x-show="score < 3">Consider learning more about epilepsy to help support those affected.</span>
+                            </p>
+                            <div class="space-y-4">
+                                <button @click="currentQuestion = 0; score = 0" class="bg-primary text-white px-8 py-3 rounded-lg hover:bg-secondary transition font-semibold">
+                                    Take Quiz Again
+                                </button>
+                                <button @click="quizOpen = false; currentQuestion = 0; score = 0" class="border border-primary text-primary dark:text-white px-8 py-3 rounded-lg hover:bg-primary/10 transition font-semibold">
+                                    Close
+                                </button>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
 
-<!-- 3D Map Script -->
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        // Initialize 3D map
-        const container = document.getElementById('africa-3d-map');
-        
-        if (container) {
-            const scene = new THREE.Scene();
-            const camera = new THREE.PerspectiveCamera(75, container.clientWidth / container.clientHeight, 0.1, 1000);
-            const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
-            renderer.setSize(container.clientWidth, container.clientHeight);
-            container.appendChild(renderer.domElement);
-            
-            // Add lighting
-            const ambientLight = new THREE.AmbientLight(0x404040);
-            scene.add(ambientLight);
-            
-            const directionalLight = new THREE.DirectionalLight(0xffffff, 1);
-            directionalLight.position.set(1, 1, 1);
-            scene.add(directionalLight);
-            
-            // Add Africa model (placeholder - in a real app you'd load a proper model)
-            const geometry = new THREE.SphereGeometry(5, 32, 32);
-            const material = new THREE.MeshPhongMaterial({ 
-                color: 0x6A0DAD,
-                transparent: true,
-                opacity: 0.8,
-                wireframe: true
-            });
-            const sphere = new THREE.Mesh(geometry, material);
-            scene.add(sphere);
-            
-            // Add country markers
-            const markerGeometry = new THREE.SphereGeometry(0.1, 16, 16);
-            const markerMaterial = new THREE.MeshBasicMaterial({ color: 0xFF6C0C });
-            
-            // Kenya
-            const kenyaMarker = new THREE.Mesh(markerGeometry, markerMaterial);
-            kenyaMarker.position.set(-1, 0.5, 3);
-            scene.add(kenyaMarker);
-            
-            // Nigeria
-            const nigeriaMarker = new THREE.Mesh(markerGeometry, markerMaterial);
-            nigeriaMarker.position.set(-3, 0.2, 2);
-            scene.add(nigeriaMarker);
-            
-            // South Africa
-            const saMarker = new THREE.Mesh(markerGeometry, markerMaterial);
-            saMarker.position.set(1, -1, 3);
-            scene.add(saMarker);
-            
-            camera.position.z = 8;
-            
-            // Add controls
-            const controls = new THREE.OrbitControls(camera, renderer.domElement);
-            controls.enableDamping = true;
-            controls.dampingFactor = 0.25;
-            controls.enableZoom = true;
-            controls.autoRotate = true;
-            controls.autoRotateSpeed = 0.5;
-            
-            // Animation loop
-            function animate() {
-                requestAnimationFrame(animate);
-                controls.update();
-                renderer.render(scene, camera);
+    <!-- Quick View Modal -->
+    <div x-data="{ 
+        open: false, 
+        product: { id: null, name: '', price: '', description: '', image: '', stock: 0 }
+    }" 
+    x-show="open" 
+    @open-quick-view.window="
+        open = true;
+        product.id = $event.detail.id;
+        product.name = $event.detail.name;
+        product.price = $event.detail.price;
+        product.description = $event.detail.description;
+        product.image = $event.detail.image;
+        product.stock = $event.detail.stock;
+        document.body.style.overflow = 'hidden';
+    "
+    @click.away="open = false; document.body.style.overflow = ''"
+    x-transition class="fixed inset-0 z-50 overflow-y-auto" style="background-color: rgba(0,0,0,0.5); backdrop-filter: blur(5px);">
+        <div class="flex items-center justify-center min-h-screen p-4">
+            <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-xl overflow-hidden w-full max-w-4xl">
+                <div class="grid md:grid-cols-2">
+                    <div class="p-6 md:p-8">
+                        <div class="relative h-64 md:h-80 mb-6 rounded-xl overflow-hidden">
+                            <img x-bind:src="product.image" x-bind:alt="product.name" class="w-full h-full object-cover">
+                        </div>
+                    </div>
+                    <div class="p-6 md:p-8">
+                        <div class="flex justify-between items-start mb-4">
+                            <div>
+                                <h3 x-text="product.name" class="text-2xl font-bold font-display"></h3>
+                                <p x-text="'KES ' + product.price" class="text-primary text-xl font-bold mt-2"></p>
+                            </div>
+                            <button @click="open = false; document.body.style.overflow = ''" class="text-gray-500 hover:text-gray-700 dark:hover:text-gray-300">
+                                <i class="fas fa-times"></i>
+                            </button>
+                        </div>
+                        <div class="prose dark:prose-invert max-w-none mb-6" x-html="product.description"></div>
+                        <div class="flex space-x-4">
+                            <button @click="$dispatch('open-buy-modal', product)" class="bg-primary text-white px-6 py-3 rounded-lg hover:bg-secondary transition font-semibold flex-1 text-center">
+                                <i class="fas fa-shopping-cart mr-2"></i> Buy Now
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 3D Map Script and Featured Modal Control -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Initialize 3D map
+            const container = document.getElementById('africa-3d-map');
+            if (container) {
+                const scene = new THREE.Scene();
+                const camera = new THREE.PerspectiveCamera(75, container.clientWidth / container.clientHeight, 0.1, 1000);
+                const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+                renderer.setSize(container.clientWidth, container.clientHeight);
+                container.appendChild(renderer.domElement);
+                
+                const ambientLight = new THREE.AmbientLight(0x404040);
+                scene.add(ambientLight);
+                
+                const directionalLight = new THREE.DirectionalLight(0xffffff, 1);
+                directionalLight.position.set(1, 1, 1);
+                scene.add(directionalLight);
+                
+                const geometry = new THREE.SphereGeometry(5, 32, 32);
+                const material = new THREE.MeshPhongMaterial({ 
+                    color: 0x6A0DAD,
+                    transparent: true,
+                    opacity: 0.8,
+                    wireframe: true
+                });
+                const sphere = new THREE.Mesh(geometry, material);
+                scene.add(sphere);
+                
+                const markerGeometry = new THREE.SphereGeometry(0.1, 16, 16);
+                const markerMaterial = new THREE.MeshBasicMaterial({ color: 0xFF6C0C });
+                
+                const kenyaMarker = new THREE.Mesh(markerGeometry, markerMaterial);
+                kenyaMarker.position.set(-1, 0.5, 3);
+                scene.add(kenyaMarker);
+                
+                const nigeriaMarker = new THREE.Mesh(markerGeometry, markerMaterial);
+                nigeriaMarker.position.set(-3, 0.2, 2);
+                scene.add(nigeriaMarker);
+                
+                const saMarker = new THREE.Mesh(markerGeometry, markerMaterial);
+                saMarker.position.set(1, -1, 3);
+                scene.add(saMarker);
+                
+                camera.position.z = 8;
+                
+                const controls = new THREE.OrbitControls(camera, renderer.domElement);
+                controls.enableDamping = true;
+                controls.dampingFactor = 0.25;
+                controls.enableZoom = true;
+                controls.autoRotate = true;
+                controls.autoRotateSpeed = 0.5;
+                
+                function animate() {
+                    requestAnimationFrame(animate);
+                    controls.update();
+                    renderer.render(scene, camera);
+                }
+                
+                animate();
+                
+                window.addEventListener('resize', function() {
+                    camera.aspect = container.clientWidth / container.clientHeight;
+                    camera.updateProjectionMatrix();
+                    renderer.setSize(container.clientWidth, container.clientHeight);
+                });
             }
             
-            animate();
+            // GSAP animations
+            gsap.registerPlugin(ScrollTrigger);
             
-            // Handle window resize
-            window.addEventListener('resize', function() {
-                camera.aspect = container.clientWidth / container.clientHeight;
-                camera.updateProjectionMatrix();
-                renderer.setSize(container.clientWidth, container.clientHeight);
+            gsap.utils.toArray('.animate-fade-in').forEach(element => {
+                gsap.from(element, {
+                    opacity: 0,
+                    y: 20,
+                    duration: 0.8,
+                    scrollTrigger: {
+                        trigger: element,
+                        start: "top 80%",
+                        toggleActions: "play none none none"
+                    }
+                });
             });
-        }
-        
-        // Initialize GSAP animations
-        gsap.registerPlugin(ScrollTrigger);
-        
-        // Animate elements on scroll
-        gsap.utils.toArray('.animate-fade-in').forEach(element => {
-            gsap.from(element, {
-                opacity: 0,
-                y: 20,
-                duration: 0.8,
-                scrollTrigger: {
-                    trigger: element,
-                    start: "top 80%",
-                    toggleActions: "play none none none"
-                }
+            
+            gsap.utils.toArray('.animate-fade-in-delay').forEach((element, i) => {
+                gsap.from(element, {
+                    opacity: 0,
+                    y: 20,
+                    duration: 0.8,
+                    delay: i * 0.2,
+                    scrollTrigger: {
+                        trigger: element,
+                        start: "top 80%",
+                        toggleActions: "play none none none"
+                    }
+                });
             });
-        });
-        
-        // Animate with delay
-        gsap.utils.toArray('.animate-fade-in-delay').forEach((element, i) => {
-            gsap.from(element, {
-                opacity: 0,
-                y: 20,
-                duration: 0.8,
-                delay: i * 0.2,
-                scrollTrigger: {
-                    trigger: element,
-                    start: "top 80%",
-                    toggleActions: "play none none none"
-                }
+            
+            gsap.to('.animate-float', {
+                y: 15,
+                duration: 3,
+                repeat: -1,
+                yoyo: true,
+                ease: "sine.inOut"
             });
+
+            // Featured Product Modal Logic
+            const today = new Date().toISOString().split('T')[0];
+            const lastShown = localStorage.getItem('featuredModalLastShown');
+            const modalData = document.querySelector('[x-data*="featuredModalOpen"]').__x.$data;
+
+            if (modalData.product && (!lastShown || lastShown !== today)) {
+                modalData.open = true;
+                document.body.style.overflow = 'hidden';
+                localStorage.setItem('featuredModalLastShown', today);
+            }
         });
-        
-        // Animate floating elements
-        gsap.to('.animate-float', {
-            y: 15,
-            duration: 3,
-            repeat: -1,
-            yoyo: true,
-            ease: "sine.inOut"
-        });
-    });
-</script>
+    </script>
 </body>
 </html>
