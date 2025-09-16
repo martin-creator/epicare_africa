@@ -41,11 +41,12 @@ class JobApplicationForm(forms.ModelForm):
 class OrderForm(forms.ModelForm):
     class Meta:
         model = Order
-        fields = ['quantity', 'email', 'phone']
+        fields = ['quantity', 'email', 'phone', 'delivery_location']
         widgets = {
             'quantity': forms.Select(attrs={'class': 'w-full px-3 py-2 border rounded-lg dark:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-primary'}),
             'email': forms.EmailInput(attrs={'class': 'w-full px-3 py-2 border rounded-lg dark:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-primary', 'placeholder': 'Your email (optional)'}),
-            'phone': forms.TextInput(attrs={'class': 'w-full px-3 py-2 border rounded-lg dark:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-primary', 'placeholder': 'Your phone (optional)'})
+            'phone': forms.TextInput(attrs={'class': 'w-full px-3 py-2 border rounded-lg dark:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-primary', 'placeholder': 'Your phone (optional)'}),
+            'delivery_location': forms.TextInput(attrs={'class': 'w-full px-3 py-2 border rounded-lg dark:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-primary', 'placeholder': 'Delivery address (e.g., Nairobi, Kenya)'})
         }
     def clean_quantity(self):
         quantity = self.cleaned_data['quantity']

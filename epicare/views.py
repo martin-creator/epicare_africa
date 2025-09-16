@@ -76,12 +76,14 @@ def buy_now(request, product_id):
             quantity = form.cleaned_data['quantity']
             email = form.cleaned_data.get('email', 'customer@example.com')
             phone = form.cleaned_data.get('phone', '254101108886')
+            delivery_location = form.cleaned_data.get('delivery_location', 'Not specified')
             if quantity <= product.stock:
                 order = Order.objects.create(
                     product=product,
                     quantity=quantity,
                     email=email,
                     phone=phone,
+                    delivery_location=delivery_location,
                     status='Pending'
                 )
                 product.stock -= quantity
@@ -92,6 +94,7 @@ def buy_now(request, product_id):
                     f"Order Details:\n"
                     f"Product: {product.name}\n"
                     f"Quantity: {quantity}\n"
+                    f"Delivery Location: {delivery_location}\n"
                     f"Total Price: KES {product.price * quantity}\n\n"
                     f"Please make your payment using M-PESA:\n"
                     f"Paybill Number: 100400\n"

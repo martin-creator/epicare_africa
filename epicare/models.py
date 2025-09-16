@@ -40,6 +40,7 @@ class Order(models.Model):
     quantity = models.PositiveIntegerField()
     email = models.EmailField()
     phone = models.CharField(max_length=20)
+    delivery_location = models.CharField(max_length=200, blank=True, help_text="Delivery address for the order")
     created_at = models.DateTimeField(auto_now_add=True)
     status = models.CharField(max_length=20, default='Pending')
 

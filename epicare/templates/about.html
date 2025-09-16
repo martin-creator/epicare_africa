@@ -1,6 +1,6 @@
 {% load static %}
 <!DOCTYPE html>
-<html lang="en" x-data="{ darkMode: localStorage.getItem('darkMode') === 'true', mobileMenuOpen: false, chatOpen: false }" :class="{ 'dark': darkMode }">
+<html lang="en" x-data="{ darkMode: localStorage.getItem('darkMode') === 'true', mobileMenuOpen: false, chatOpen: false, quizOpen: false, currentQuestion: 0, score: 0 }" :class="{ 'dark': darkMode }">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -138,7 +138,7 @@
 </head>
 <body class="bg-light dark:bg-dark text-gray-900 dark:text-white transition-colors duration-300 scroll-smooth">
     <!-- Navigation -->
-    <header class="sticky top-0 z-50 bg-white/80 dark:bg-dark/80 backdrop-blur-md shadow-sm">
+  <header class="sticky top-0 z-50 bg-white/80 dark:bg-dark/80 backdrop-blur-md shadow-sm">
         <div class="container mx-auto px-6 py-4">
             <div class="flex justify-between items-center">
                 <a href="{% url 'homepage' %}" class="text-3xl font-bold font-display flex items-center group">
@@ -150,13 +150,13 @@
                 <!-- Desktop Navigation -->
                 <nav class="hidden md:flex space-x-8 items-center">
                     <a href="{% url 'homepage' %}" class="nav-link text-gray-600 dark:text-gray-300 font-medium">Home</a>
-                    <a href="{% url 'about' %}" class="nav-link text-primary dark:text-primary font-medium">About</a>
+                    <a href="{% url 'about' %}" class="nav-link text-primary dark:text-gray-300 font-medium">About</a>
                     <a href="{% url 'shop' %}" class="nav-link text-gray-600 dark:text-gray-300 font-medium">Shop</a>
                     <a href="{% url 'blog' %}" class="nav-link text-gray-600 dark:text-gray-300 font-medium">Blog</a>
                     <a href="{% url 'careers' %}" class="nav-link text-gray-600 dark:text-gray-300 font-medium">Careers</a>
-                    <a href="{% url 'contact' %}" class="nav-link text-gray-600 dark:text-gray-gray-300 font-medium">Contact</a>
-                    <button @click="chatOpen = true" class="bg-primary text-white px-6 py-2 rounded-lg hover:bg-secondary transition flex items-center">
-                        <i class="fas fa-comment-medical mr-2"></i> Live Chat
+                    <a href="{% url 'contact' %}" class="nav-link text-gray-600 dark:text-gray-300 font-medium">Contact</a>
+                    <button @click="quizOpen = true" class="bg-primary text-white px-6 py-2 rounded-lg hover:bg-secondary transition flex items-center glow-effect">
+                        <i class="fas fa-brain mr-2"></i> Take Quiz
                     </button>
                 </nav>
                 
@@ -171,13 +171,13 @@
             <div x-show="mobileMenuOpen" x-transition class="md:hidden mt-4 py-4 border-t border-gray-200 dark:border-gray-700">
                 <div class="flex flex-col space-y-4">
                     <a href="{% url 'homepage' %}" class="px-3 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition font-medium">Home</a>
-                    <a href="{% url 'about' %}" class="px-3 py-2 rounded-lg bg-primary/10 text-primary dark:text-primary font-medium">About</a>
+                    <a href="{% url 'about' %}" class="px-3 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition font-medium">About</a>
                     <a href="{% url 'shop' %}" class="px-3 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition font-medium">Shop</a>
                     <a href="{% url 'blog' %}" class="px-3 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition font-medium">Blog</a>
                     <a href="{% url 'careers' %}" class="px-3 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition font-medium">Careers</a>
                     <a href="{% url 'contact' %}" class="px-3 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition font-medium">Contact</a>
-                    <button @click="chatOpen = true" class="w-full bg-primary text-white px-6 py-3 rounded-lg hover:bg-secondary transition font-semibold mt-4 flex items-center justify-center">
-                        <i class="fas fa-comment-medical mr-2"></i> Live Chat
+                    <button @click="quizOpen = true" class="w-full bg-primary text-white px-6 py-3 rounded-lg hover:bg-secondary transition font-semibold mt-4 flex items-center justify-center">
+                        <i class="fas fa-brain mr-2"></i> Take Quiz
                     </button>
                 </div>
             </div>
@@ -726,6 +726,213 @@
         <button id="backToTop" class="fixed bottom-6 right-6 bg-primary text-white p-3 rounded-full shadow-lg opacity-0 invisible transition-all duration-300 hover:bg-secondary">
             <i class="fas fa-arrow-up"></i>
         </button>
+
+         <!-- Quiz Modal -->
+    <div x-show="quizOpen" x-transition class="fixed inset-0 z-50 overflow-y-auto" style="background-color: rgba(0,0,0,0.5); backdrop-filter: blur(5px);">
+        <div class="flex items-center justify-center min-h-screen p-4">
+            <div @click.away="quizOpen = false" class="bg-white dark:bg-gray-800 rounded-2xl shadow-xl overflow-hidden w-full max-w-2xl">
+                <div class="p-6">
+                    <div class="flex justify-between items-center mb-6">
+                        <h3 class="text-2xl font-bold font-display">Epilepsy Awareness Quiz</h3>
+                        <button @click="quizOpen = false" class="text-gray-500 hover:text-gray-700 dark:hover:text-gray-300">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                    
+                    <!-- Quiz Content -->
+                    <div x-show="currentQuestion === 0">
+                        <div class="text-center py-8">
+                            <div class="w-24 h-24 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-6">
+                                <i class="fas fa-brain text-primary text-4xl"></i>
+                            </div>
+                            <h4 class="text-xl font-semibold mb-4">Test Your Epilepsy Knowledge</h4>
+                            <p class="text-gray-600 dark:text-gray-300 mb-6">
+                                This 5-question quiz will help you understand important facts about epilepsy and how to support those affected.
+                            </p>
+                            <button @click="currentQuestion = 1" class="bg-primary text-white px-8 py-3 rounded-lg hover:bg-secondary transition font-semibold">
+                                Start Quiz
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <!-- Question 1 -->
+                    <div x-show="currentQuestion === 1" x-transition>
+                        <div class="mb-6">
+                            <div class="flex items-center justify-between mb-2">
+                                <span class="text-sm font-medium text-primary">Question 1 of 5</span>
+                                <span class="text-sm font-medium text-gray-500 dark:text-gray-400">Epilepsy Basics</span>
+                            </div>
+                            <div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
+                                <div class="bg-primary h-2 rounded-full" style="width: 20%"></div>
+                            </div>
+                        </div>
+                        
+                        <h4 class="text-xl font-semibold mb-6">What is epilepsy?</h4>
+                        
+                        <div class="space-y-3">
+                            <button @click="currentQuestion = 2" class="w-full text-left p-4 border border-gray-200 dark:border-gray-700 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition">
+                                A. A mental illness
+                            </button>
+                            <button @click="currentQuestion = 2; score += 1" class="w-full text-left p-4 border border-gray-200 dark:border-gray-700 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition">
+                                B. A neurological disorder characterized by recurrent seizures
+                            </button>
+                            <button @click="currentQuestion = 2" class="w-full text-left p-4 border border-gray-200 dark:border-gray-700 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition">
+                                C. A contagious disease
+                            </button>
+                            <button @click="currentQuestion = 2" class="w-full text-left p-4 border border-gray-200 dark:border-gray-700 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition">
+                                D. A type of headache disorder
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <!-- Question 2 -->
+                    <div x-show="currentQuestion === 2" x-transition>
+                        <div class="mb-6">
+                            <div class="flex items-center justify-between mb-2">
+                                <span class="text-sm font-medium text-primary">Question 2 of 5</span>
+                                <span class="text-sm font-medium text-gray-500 dark:text-gray-400">First Aid</span>
+                            </div>
+                            <div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
+                                <div class="bg-primary h-2 rounded-full" style="width: 40%"></div>
+                            </div>
+                        </div>
+                        
+                        <h4 class="text-xl font-semibold mb-6">What should you do if someone is having a seizure?</h4>
+                        
+                        <div class="space-y-3">
+                            <button @click="currentQuestion = 3" class="w-full text-left p-4 border border-gray-200 dark:border-gray-700 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition">
+                                A. Hold them down to stop the shaking
+                            </button>
+                            <button @click="currentQuestion = 3" class="w-full text-left p-4 border border-gray-200 dark:border-gray-700 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition">
+                                B. Put something in their mouth to prevent tongue biting
+                            </button>
+                            <button @click="currentQuestion = 3; score += 1" class="w-full text-left p-4 border border-gray-200 dark:border-gray-700 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition">
+                                C. Clear the area around them, cushion their head, and time the seizure
+                            </button>
+                            <button @click="currentQuestion = 3" class="w-full text-left p-4 border border-gray-200 dark:border-gray-700 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition">
+                                D. Pour water on their face to shock them out of it
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <!-- Question 3 -->
+                    <div x-show="currentQuestion === 3" x-transition>
+                        <div class="mb-6">
+                            <div class="flex items-center justify-between mb-2">
+                                <span class="text-sm font-medium text-primary">Question 3 of 5</span>
+                                <span class="text-sm font-medium text-gray-500 dark:text-gray-400">Treatment</span>
+                            </div>
+                            <div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
+                                <div class="bg-primary h-2 rounded-full" style="width: 60%"></div>
+                            </div>
+                        </div>
+                        
+                        <h4 class="text-xl font-semibold mb-6">Which of these is NOT true about epilepsy treatment?</h4>
+                        
+                        <div class="space-y-3">
+                            <button @click="currentQuestion = 4" class="w-full text-left p-4 border border-gray-200 dark:border-gray-700 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition">
+                                A. Most people with epilepsy can control seizures with medication
+                            </button>
+                            <button @click="currentQuestion = 4" class="w-full text-left p-4 border border-gray-200 dark:border-gray-700 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition">
+                                B. Surgery may be an option for some people
+                            </button>
+                            <button @click="currentQuestion = 4" class="w-full text-left p-4 border border-gray-200 dark:border-gray-700 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition">
+                                C. Dietary therapies can help certain types of epilepsy
+                            </button>
+                            <button @click="currentQuestion = 4; score += 1" class="w-full text-left p-4 border border-gray-200 dark:border-gray-700 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition">
+                                D. Epilepsy can always be cured with proper treatment
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <!-- Question 4 -->
+                    <div x-show="currentQuestion === 4" x-transition>
+                        <div class="mb-6">
+                            <div class="flex items-center justify-between mb-2">
+                                <span class="text-sm font-medium text-primary">Question 4 of 5</span>
+                                <span class="text-sm font-medium text-gray-500 dark:text-gray-400">Myths</span>
+                            </div>
+                            <div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
+                                <div class="bg-primary h-2 rounded-full" style="width: 80%"></div>
+                            </div>
+                        </div>
+                        
+                        <h4 class="text-xl font-semibold mb-6">Which statement about epilepsy is a MYTH?</h4>
+                        
+                        <div class="space-y-3">
+                            <button @click="currentQuestion = 5; score += 1" class="w-full text-left p-4 border border-gray-200 dark:border-gray-700 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition">
+                                A. Epilepsy is caused by evil spirits or witchcraft
+                            </button>
+                            <button @click="currentQuestion = 5" class="w-full text-left p-4 border border-gray-200 dark:border-gray-700 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition">
+                                B. Epilepsy is a neurological condition
+                            </button>
+                            <button @click="currentQuestion = 5" class="w-full text-left p-4 border border-gray-200 dark:border-gray-700 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition">
+                                C. People with epilepsy can live normal lives
+                            </button>
+                            <button @click="currentQuestion = 5" class="w-full text-left p-4 border border-gray-200 dark:border-gray-700 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition">
+                                D. Not all seizures involve convulsions
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <!-- Question 5 -->
+                    <div x-show="currentQuestion === 5" x-transition>
+                        <div class="mb-6">
+                            <div class="flex items-center justify-between mb-2">
+                                <span class="text-sm font-medium text-primary">Question 5 of 5</span>
+                                <span class="text-sm font-medium text-gray-500 dark:text-gray-400">Africa Context</span>
+                            </div>
+                            <div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
+                                <div class="bg-primary h-2 rounded-full" style="width: 100%"></div>
+                            </div>
+                        </div>
+                        
+                        <h4 class="text-xl font-semibold mb-6">What is the epilepsy treatment gap in Africa?</h4>
+                        
+                        <div class="space-y-3">
+                            <button @click="currentQuestion = 6" class="w-full text-left p-4 border border-gray-200 dark:border-gray-700 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition">
+                                A. Less than 10% of people don't receive treatment
+                            </button>
+                            <button @click="currentQuestion = 6" class="w-full text-left p-4 border border-gray-200 dark:border-gray-700 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition">
+                                B. About 30% of people don't receive treatment
+                            </button>
+                            <button @click="currentQuestion = 6; score += 1" class="w-full text-left p-4 border border-gray-200 dark:border-gray-700 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition">
+                                C. Over 75% of people don't receive proper treatment
+                            </button>
+                            <button @click="currentQuestion = 6" class="w-full text-left p-4 border border-gray-200 dark:border-gray-700 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition">
+                                D. There is no treatment gap in Africa
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <!-- Results -->
+                    <div x-show="currentQuestion === 6" x-transition>
+                        <div class="text-center py-8">
+                            <div class="w-24 h-24 rounded-full flex items-center justify-center mx-auto mb-6" 
+                                 :class="score >= 3 ? 'bg-green-100 text-green-600' : 'bg-yellow-100 text-yellow-600'">
+                                <i :class="score >= 3 ? 'fas fa-check-circle text-4xl' : 'fas fa-exclamation-circle text-4xl'"></i>
+                            </div>
+                            <h4 class="text-xl font-semibold mb-4" x-text="score >= 3 ? 'Great Job!' : 'Good Try!'"></h4>
+                            <p class="text-gray-600 dark:text-gray-300 mb-6">
+                                You scored <span class="font-bold" x-text="score + ' out of 5'"></span>.
+                                <span x-show="score >= 4">You have excellent knowledge about epilepsy!</span>
+                                <span x-show="score == 3">You have good basic knowledge about epilepsy.</span>
+                                <span x-show="score < 3">Consider learning more about epilepsy to help support those affected.</span>
+                            </p>
+                            <div class="space-y-4">
+                                <button @click="currentQuestion = 0; score = 0" class="bg-primary text-white px-8 py-3 rounded-lg hover:bg-secondary transition font-semibold">
+                                    Take Quiz Again
+                                </button>
+                                <button @click="quizOpen = false; currentQuestion = 0; score = 0" class="border border-primary text-primary dark:text-white px-8 py-3 rounded-lg hover:bg-primary/10 transition font-semibold">
+                                    Close
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
     
         <script>
             // Back to Top Button

@@ -1,6 +1,6 @@
 {% load static %}
 <!DOCTYPE html>
-<html lang="en" x-data="{ darkMode: localStorage.getItem('darkMode') === 'true', mobileMenuOpen: false, chatOpen: false, quizOpen: false, currentQuestion: 0, score: 0, featuredModalOpen: false }" :class="{ 'dark': darkMode }">
+<html lang="en" x-data="{ darkMode: localStorage.getItem('darkMode') === 'true', mobileMenuOpen: false, chatOpen: false, quizOpen: false, currentQuestion: 0, score: 0 }" :class="{ 'dark': darkMode }">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -419,10 +419,7 @@
                     <div class="p-6">
                         <h3 class="text-xl font-semibold mb-2">{{ product.name }}</h3>
                         <p class="text-primary text-lg font-bold mb-4">KES {{ product.price }}</p>
-                        <div class="flex space-x-3">
-                            <button @click="$dispatch('open-quick-view', { id: {{ product.id }}, name: '{{ product.name|escapejs }}', price: '{{ product.price }}', description: '{{ product.description|escapejs }}', image: '{{ product.image.url }}', stock: {{ product.stock }} })" class="bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-white p-2 rounded-full hover:bg-gray-200 dark:hover:bg-gray-600 transition">
-                                <i class="fas fa-eye"></i>
-                            </button>
+                        <div class="flex">
                             <button @click="$dispatch('open-buy-modal', { id: {{ product.id }}, name: '{{ product.name|escapejs }}', price: '{{ product.price }}', description: '{{ product.description|escapejs }}', image: '{{ product.image.url }}', stock: {{ product.stock }} })" class="bg-primary text-white px-4 py-2 rounded-lg hover:bg-secondary transition flex-1 text-center flex items-center justify-center {% if product.stock == 0 %}opacity-50 cursor-not-allowed{% endif %}" {% if product.stock == 0 %}disabled{% endif %}>
                                 <i class="fas fa-shopping-cart mr-2"></i> Buy Now
                             </button>
@@ -482,74 +479,15 @@
                             <input type="tel" id="phone" name="phone" placeholder="Your phone" 
                                    class="w-full px-3 py-2 border rounded-lg dark:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-primary">
                         </div>
-                        <button type="submit" 
-                                @click="paymentInstructions = true" 
-                                class="w-full bg-primary text-white px-4 py-2 rounded-lg hover:bg-secondary transition font-semibold" 
-                                :disabled="product.stock === 0">
-                            Confirm Order
-                        </button>
-                    </form>
-                    <div x-show="paymentInstructions" x-transition class="mt-6">
-                        <h3 class="text-lg md:text-xl font-semibold text-gray-800 dark:text-white mb-2">M-PESA Payment Instructions</h3>
-                        <p class="text-gray-600 dark:text-gray-300"><strong>Paybill Number:</strong> 100400</p>
-                        <p class="text-gray-600 dark:text-gray-300"><strong>Account Name:</strong> Epicare</p>
-                        <p class="text-gray-600 dark:text-gray-300 mt-2">Once you make your payment, our team will reach out to confirm your order.</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Featured Product Modal -->
-    <div x-data="{ 
-        open: false, 
-        product: {{ featured_product | safe }}, 
-        paymentInstructions: false 
-    }" 
-    x-show="open && product" 
-    @click.away="open = false; paymentInstructions = false; document.body.style.overflow = ''" 
-    class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 animate-fade-in">
-        <div class="bg-white dark:bg-gray-800 p-6 md:p-8 rounded-lg w-[90vw] h-[90vh] max-w-7xl overflow-y-auto">
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <!-- Left: Image -->
-                <div>
-                    <img :src="product.image" :alt="product.name" class="w-full h-80 object-cover rounded-lg">
-                </div>
-                <!-- Right: Content -->
-                <div class="flex flex-col">
-                    <div class="flex justify-between items-center mb-4">
-                        <h2 class="text-2xl md:text-3xl font-bold font-display" x-text="product.name"></h2>
-                        <button @click="open = false; paymentInstructions = false; document.body.style.overflow = ''" 
-                                class="text-gray-600 dark:text-gray-300 hover:text-primary dark:hover:text-primary">
-                            <i class="fas fa-times text-xl"></i>
-                        </button>
-                    </div>
-                    <p class="text-gray-600 dark:text-gray-300 mb-4" x-text="product.description"></p>
-                    <p class="text-primary text-lg md:text-xl font-bold mb-2" x-text="'KES ' + product.price"></p>
-                    <p :class="product.stock > 0 ? 'text-accent' : 'text-gray-600'" class="mb-4" 
-                       x-text="product.stock > 0 ? 'In Stock: ' + product.stock + ' available' : 'Out of Stock'"></p>
-                    <form method="post" action="{% url 'buy_now' product_id=0 %}" x-bind:action="'{% url 'buy_now' product_id=0 %}'.replace('0', product.id)">
-                        {% csrf_token %}
-                        <input type="hidden" name="product_id" x-bind:value="product.id">
                         <div class="mb-4">
-                            <label for="quantity" class="block text-sm mb-1 text-gray-600 dark:text-gray-300">Quantity:</label>
-                            <select id="quantity" name="quantity" 
-                                    class="w-full px-3 py-2 border rounded-lg dark:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-primary"
-                                    :disabled="product.stock === 0">
-                                <template x-for="i in Math.min(product.stock || 0, 10)" :key="i">
-                                    <option :value="i" x-text="i"></option>
-                                </template>
-                            </select>
-                        </div>
-                        <div class="mb-4">
-                            <label for="email" class="block text-sm mb-1 text-gray-600 dark:text-gray-300">Email (optional):</label>
-                            <input type="email" id="email" name="email" placeholder="Your email" 
+                            <label for="delivery_location" class="block text-sm mb-1 text-gray-600 dark:text-gray-300">Delivery Address:</label>
+                            <input type="text" id="delivery_location" name="delivery_location" placeholder="Delivery address (e.g., Nairobi, Kenya)" 
                                    class="w-full px-3 py-2 border rounded-lg dark:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-primary">
                         </div>
                         <div class="mb-4">
-                            <label for="phone" class="block text-sm mb-1 text-gray-600 dark:text-gray-300">Phone (optional):</label>
-                            <input type="tel" id="phone" name="phone" placeholder="Your phone" 
-                                   class="w-full px-3 py-2 border rounded-lg dark:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-primary">
+                            <label for="delivery_instructions" class="block text-sm mb-1 text-gray-600 dark:text-gray-300">Delivery Instructions (optional):</label>
+                            <textarea id="delivery_instructions" name="delivery_instructions" placeholder="E.g., Leave at gate, call on arrival" 
+                                      class="w-full px-3 py-2 border rounded-lg dark:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-primary resize-y" rows="4"></textarea>
                         </div>
                         <button type="submit" 
                                 @click="paymentInstructions = true" 
@@ -1014,55 +952,7 @@
         </div>
     </div>
 
-    <!-- Quick View Modal -->
-    <div x-data="{ 
-        open: false, 
-        product: { id: null, name: '', price: '', description: '', image: '', stock: 0 }
-    }" 
-    x-show="open" 
-    @open-quick-view.window="
-        open = true;
-        product.id = $event.detail.id;
-        product.name = $event.detail.name;
-        product.price = $event.detail.price;
-        product.description = $event.detail.description;
-        product.image = $event.detail.image;
-        product.stock = $event.detail.stock;
-        document.body.style.overflow = 'hidden';
-    "
-    @click.away="open = false; document.body.style.overflow = ''"
-    x-transition class="fixed inset-0 z-50 overflow-y-auto" style="background-color: rgba(0,0,0,0.5); backdrop-filter: blur(5px);">
-        <div class="flex items-center justify-center min-h-screen p-4">
-            <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-xl overflow-hidden w-full max-w-4xl">
-                <div class="grid md:grid-cols-2">
-                    <div class="p-6 md:p-8">
-                        <div class="relative h-64 md:h-80 mb-6 rounded-xl overflow-hidden">
-                            <img x-bind:src="product.image" x-bind:alt="product.name" class="w-full h-full object-cover">
-                        </div>
-                    </div>
-                    <div class="p-6 md:p-8">
-                        <div class="flex justify-between items-start mb-4">
-                            <div>
-                                <h3 x-text="product.name" class="text-2xl font-bold font-display"></h3>
-                                <p x-text="'KES ' + product.price" class="text-primary text-xl font-bold mt-2"></p>
-                            </div>
-                            <button @click="open = false; document.body.style.overflow = ''" class="text-gray-500 hover:text-gray-700 dark:hover:text-gray-300">
-                                <i class="fas fa-times"></i>
-                            </button>
-                        </div>
-                        <div class="prose dark:prose-invert max-w-none mb-6" x-html="product.description"></div>
-                        <div class="flex space-x-4">
-                            <button @click="$dispatch('open-buy-modal', product)" class="bg-primary text-white px-6 py-3 rounded-lg hover:bg-secondary transition font-semibold flex-1 text-center">
-                                <i class="fas fa-shopping-cart mr-2"></i> Buy Now
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- 3D Map Script and Featured Modal Control -->
+    <!-- 3D Map Script -->
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             // Initialize 3D map
@@ -1167,17 +1057,6 @@
                 yoyo: true,
                 ease: "sine.inOut"
             });
-
-            // Featured Product Modal Logic
-            const today = new Date().toISOString().split('T')[0];
-            const lastShown = localStorage.getItem('featuredModalLastShown');
-            const modalData = document.querySelector('[x-data*="featuredModalOpen"]').__x.$data;
-
-            if (modalData.product && (!lastShown || lastShown !== today)) {
-                modalData.open = true;
-                document.body.style.overflow = 'hidden';
-                localStorage.setItem('featuredModalLastShown', today);
-            }
         });
     </script>
 </body>
