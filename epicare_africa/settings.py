@@ -30,6 +30,7 @@ ALLOWED_HOSTS = ['*']  # Change this to your domain in production
 CSRF_TRUSTED_ORIGINS = [
     'https://epicare-africa.onrender.com',  # Add your production domain here
     'http://localhost:8000',  # Local development
+    'https://epicareafrica.co.ke'
 ]
 
 INSTALLED_APPS = [

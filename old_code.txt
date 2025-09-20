@@ -1,3 +1,7 @@
+Enter to the virtual environment.To enter to virtual environment, run the command: source /home/epicarea/virtualenv/epicare_website/3.10/bin/activate && cd /home/epicarea/epicare_website
+
+
+
 {% load static %}
 <!DOCTYPE html>
 <html lang="en" x-data="{ darkMode: localStorage.getItem('darkMode') === 'true', chatOpen: false, showConsent: !localStorage.getItem('cookieConsent'), open: false, product: {} }" :class="{ 'dark': darkMode }" class="scroll-smooth">
