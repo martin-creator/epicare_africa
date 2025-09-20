@@ -76,9 +76,18 @@ TEMPLATES = [
 WSGI_APPLICATION = 'epicare_africa.wsgi.application'
 
 DATABASES = {
+    # 'default': {
+    #     'ENGINE': 'django.db.backends.sqlite3',
+    #     'NAME': BASE_DIR / 'db.sqlite3',
+    # }
+
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'epicarea_production',
+        'USER': 'epicarea_epicare_admin',
+        'PASSWORD': 'oALQ1tAB5XcCnqYR',
+        'HOST': 'localhost',   # or your server IP / domain
+        'PORT': '5432',        # default Postgres port
     }
 }
 

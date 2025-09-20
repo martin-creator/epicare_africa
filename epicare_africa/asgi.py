@@ -14,3 +14,7 @@ from django.core.asgi import get_asgi_application
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'epicare_africa.settings')
 
 application = get_asgi_application()
+
+# pws: oALQ1tAB5XcCnqYR
+# db_name: epicarea_production
+# db_user: epicarea_epicare_admin
